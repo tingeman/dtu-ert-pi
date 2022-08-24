@@ -28,6 +28,9 @@ enable_I2C=true
 
 # PREDEFINED SETTINGS:
 
+# [GIT BRANCH]
+GIT_BRANCH=develop      # master or develop
+
 # [AUTOSSH]
 HOSTNAME=$(hostname)
 SSHUSER=$HOSTNAME
@@ -71,11 +74,20 @@ echo '>>> Downloading dtu-ert-pi code...'
 if [ -d "$DTUERTPI_DIR" ]; then
   echo 'Seems dtu-ert-pi is installed already, skip this step.'
 else
-  wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
+  if [[ $GIT_BRANCH -eq develop ]]; then
+    wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/develop/main.zip -O "$TMP_DIR/dtu-ert-pi.zip"
+    $SRC_DIR="$TMP_DIR"/dtu-ert-pi-develop-main
+  elif [[ $GIT_BRANCH -eq master ]]; then
+    wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
+    $SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
+  else
+    echo 'Unknown git branch specified, aborting!'
+    exit 1
+  fi
   unzip -q "$TMP_DIR"/dtu-ert-pi.zip -d "$TMP_DIR"/ 
-  cp -rf "$TMP_DIR"/dtu-ert-pi-master/install_scripts/* "$INSTALL_SCRIPTS_DIR"
-  cp -rf "$TMP_DIR"/dtu-ert-pi-master/DTU_ERT_Pi "$DTUERTPI_DIR"
-  #rm -r "$TMP_DIR"/dtu-ert-pi-master "$TMP_DIR"/dtu-ert-pi.zip
+  cp -rf "$SRC_DIR"/install_scripts/* "$INSTALL_SCRIPTS_DIR"
+  cp -rf "$SRC_DIR"/DTU_ERT_Pi "$DTUERTPI_DIR"
+  #rm -r "$SRC_DIR" "$TMP_DIR"/dtu-ert-pi.zip
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
   chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
   chmod +x "$INSTALL_SCRIPTS_DIR"/*.sh
