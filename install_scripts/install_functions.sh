@@ -374,17 +374,17 @@ f_configure_modem_connection () {
     echo ">>> Installing packages related to modem operation..."
     apt-get install -y libpcap0.8 libuniconf4.6 libwvstreams4.6-base libwvstreams4.6-extras ppp wvdial minicom usb-modeswitch || ((ERR++))
 
-    cp "$INSTALL_SCRIPTS_DIR"/wvdial.conf /etc/wvdial.conf
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/wvdial.conf /etc/wvdial.conf
     echo "Check if settings are correct in /etc/wvdial.conf"
 
-    cp "$INSTALL_SCRIPTS_DIR"/ppp.conf /etc/modules-load.d/ppp.conf
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/ppp.conf /etc/modules-load.d/ppp.conf
     echo "Created /etc/modules-load.d/ppp.conf"
 
-    cp "$INSTALL_SCRIPTS_DIR"/wait-dialup-hardware /etc/ppp/wait-dialup-hardware
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/wait-dialup-hardware /etc/ppp/wait-dialup-hardware
     chmod 0755 /etc/ppp/wait-dialup-hardware
     echo "Created /etc/ppp/wait-dialup-hardware"
 
-    cp "$INSTALL_SCRIPTS_DIR"/wvdial /etc/ppp/peers/wvdial
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/wvdial /etc/ppp/peers/wvdial
     echo "Created /etc/ppp/peers/wvdial"
 
     match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/network/interfaces | grep '^iface ppp0')
@@ -429,6 +429,8 @@ f_configure_autossh () {
     mkdir /root/.ssh
 
     if [[ -f $SSH_KEY ]]; then
+       echo $SSH_KEY
+       ls -l $SSH_KEY
        echo "It seems ssh key already exists... skipping this step."
     else
         ssh-keygen -b 2048 -t rsa -f $SSH_KEY -q -N ""
@@ -436,7 +438,7 @@ f_configure_autossh () {
     fi
 
     # copy template script
-    cp "$INSTALL_SCRIPTS_DIR"/autossh-byg-cdata1-tunnel.service /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/autossh-byg-cdata1-tunnel.service /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     # do replacements according to settings
     sed -i '/ExecStart=\/usr\/bin\/autossh/s/PORT/'"$PORT"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
