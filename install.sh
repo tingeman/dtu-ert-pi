@@ -8,8 +8,6 @@
 
 # target directories
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-
 INSTALL_SCRIPTS_DIR="$CURRENT_DIR/install_files"
 TMP_DIR="$INSTALL_SCRIPTS_DIR/tmp"
 WITTYPI_DIR="$CURRENT_DIR/wittypi"
