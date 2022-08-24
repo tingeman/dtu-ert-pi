@@ -8,6 +8,8 @@
 
 # target directories
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
 INSTALL_SCRIPTS_DIR="$CURRENT_DIR/install_files"
 TMP_DIR="$INSTALL_SCRIPTS_DIR/tmp"
 WITTYPI_DIR="$CURRENT_DIR/wittypi"
@@ -30,7 +32,7 @@ enable_I2C=true
 
 # [AUTOSSH]
 HOSTNAME=$(hostname)
-USER=$HOSTNAME
+SSHUSER=$HOSTNAME
 PORT="2221"
 SERVER_IP="192.38.64.71"
 SSH_KEY=/root/.ssh/"$HOSTNAME"_sshkey
@@ -51,7 +53,16 @@ echo '==========================================================================
 # ==============================================================================
 
 # This install script is downloadable here:
-# wget https://github.com/tingeman/dtu-ert-pi/blob/a00c192857bbd00472c740912cf93c7318ae9cf4/install.sh
+
+# master branch version:
+# wget ????
+
+# develop/main branch version:
+# wget https://github.com/tingeman/dtu-ert-pi/raw/develop/main/install.sh
+
+
+# error counter
+ERR=0
 
 mkdir -p "$TMP_DIR"
 chown -R $USER:$(id -g -n $USER) "$TMP_DIR" || ((ERR++))
@@ -63,58 +74,15 @@ if [ -d "$DTUERTPI_DIR" ]; then
   echo 'Seems dtu-ert-pi is installed already, skip this step.'
 else
   wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
-  unzip "$TMP_DIR/dtu-ert-pi.zip" -d "$TMP_DIR/" 
-  cp -rf "$TMP_DIR/dtu-ert-pi-master/install_scripts" "$INSTALL_SCRIPTS_DIR"
-  cp -rf "$TMP_DIR/dtu-ert-pi-master/DTU-ERT-Pi" "$DTUERTPI_DIR"
-  rm -r "$TMP_DIR/dtu-ert-pi-master" "$TMP_DIR/dtu-ert-pi.zip"
+  unzip -q "$TMP_DIR"/dtu-ert-pi.zip -d "$TMP_DIR"/ 
+  cp -rf "$TMP_DIR"/dtu-ert-pi-master/install_scripts/* "$INSTALL_SCRIPTS_DIR"
+  cp -rf "$TMP_DIR"/dtu-ert-pi-master/DTU_ERT_Pi "$DTUERTPI_DIR"
+  #rm -r "$TMP_DIR"/dtu-ert-pi-master "$TMP_DIR"/dtu-ert-pi.zip
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
   chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
-  chmod +x "$INSTALL_SCRIPTS_DIR/*.sh"
+  chmod +x "$INSTALL_SCRIPTS_DIR"/*.sh
   sleep 2
 fi
-
-# wget https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip -O "$TMP_DIR/wittyPi.zip"
-# unzip "$TMP_DIR/wittyPi.zip" -d "$TMP_DIR/" 
-
-# wget https://github.com/silent001/Witty-Pi-4/archive/master.zip -O "${HOME}/Downloads/wittyPi.zip"
-# unzip "${HOME}/Downloads/wittyPi.zip" -d "${HOME}/Downloads/" \
-# && cp -rf "${HOME}/Downloads/Witty-Pi-4-main/Software/wittypi" "${HOME}/Downloads/Witty-Pi-4-main/Software/install.sh" "${HOME}" \
-# && rm -r "${HOME}/Downloads/Witty-Pi-4-main" "${HOME}/Downloads/wittyPi.zip"
-# cd wittypi
-# chmod +x wittyPi.sh
-# chmod +x daemon.sh
-# chmod +x syncTime.sh
-# chmod +x runScript.sh
-# chmod +x beforeScript.sh
-# chmod +x afterStartup.sh
-
-# # install wittyPi
-# if [ $ERR -eq 0 ]; then
-#   echo '>>> Install wittypi'
-#   if [ -d "wittypi" ]; then
-#     echo 'Seems wittypi is installed already, skip this step.'
-#   else
-#     wget https://www.uugear.com/repo/WittyPi4/LATEST -O wittyPi.zip || ((ERR++))
-#     unzip wittyPi.zip -d wittypi || ((ERR++))
-#     cd wittypi
-#     chmod +x wittyPi.sh
-#     chmod +x daemon.sh
-#     chmod +x runScript.sh
-#     chmod +x beforeScript.sh
-#     chmod +x afterStartup.sh
-#     chmod +x beforeShutdown.sh
-#     sed -e "s#/home/pi/wittypi#$DIR#g" init.sh >/etc/init.d/wittypi
-#     chmod +x /etc/init.d/wittypi
-#     update-rc.d wittypi defaults || ((ERR++))
-#     touch wittyPi.log
-#     touch schedule.log
-#     cd ..
-#     chown -R $SUDO_USER:$(id -g -n $SUDO_USER) wittypi || ((ERR++))
-#     sleep 2
-#     rm wittyPi.zip
-#   fi
-# fi
-
 
 
 # include all the functions handling installations
@@ -128,8 +96,6 @@ if [ "$(id -u)" != 0 ]; then
   exit 1
 fi
 
-# error counter
-ERR=0
 
 
 
@@ -251,6 +217,24 @@ systemctl restart console-setup
 # ==============================================================================
 # Install DTU-ERT-Pi
 # ==============================================================================
+
+
+
+# wget https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip -O "$TMP_DIR/wittyPi.zip"
+# unzip "$TMP_DIR/wittyPi.zip" -d "$TMP_DIR/" 
+
+# wget https://github.com/silent001/Witty-Pi-4/archive/master.zip -O "${HOME}/Downloads/wittyPi.zip"
+# unzip "${HOME}/Downloads/wittyPi.zip" -d "${HOME}/Downloads/" \
+# && cp -rf "${HOME}/Downloads/Witty-Pi-4-main/Software/wittypi" "${HOME}/Downloads/Witty-Pi-4-main/Software/install.sh" "${HOME}" \
+# && rm -r "${HOME}/Downloads/Witty-Pi-4-main" "${HOME}/Downloads/wittyPi.zip"
+# cd wittypi
+# chmod +x wittyPi.sh
+# chmod +x daemon.sh
+# chmod +x syncTime.sh
+# chmod +x runScript.sh
+# chmod +x beforeScript.sh
+# chmod +x afterStartup.sh
+
 
 #wget https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip -O "$TMP_DIR/wittyPi.zip"
 #unzip "$TMP_DIR/wittyPi.zip" -d "$TMP_DIR/" 

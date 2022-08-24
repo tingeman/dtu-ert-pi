@@ -440,7 +440,7 @@ f_configure_autossh () {
 
     # do replacements according to settings
     sed -i '/ExecStart=\/usr\/bin\/autossh/s/PORT/'"$PORT"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
-    sed -i '/ExecStart=\/usr\/bin\/autossh/s/USER/'"$USER"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    sed -i '/ExecStart=\/usr\/bin\/autossh/s/USER/'"$SSHUSER"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
     sed -i '/ExecStart=\/usr\/bin\/autossh/s/SERVER_IP/'"$SERVER_IP"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     # see this https://stackoverflow.com/a/27787551/1760389 for explanation of using ~ below
