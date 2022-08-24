@@ -76,10 +76,10 @@ if [ -d "$DTUERTPI_DIR" ]; then
 else
   if [[ $GIT_BRANCH -eq develop ]]; then
     wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/develop/main.zip -O "$TMP_DIR/dtu-ert-pi.zip"
-    $SRC_DIR="$TMP_DIR"/dtu-ert-pi-develop-main
+    SRC_DIR="$TMP_DIR"/dtu-ert-pi-develop-main
   elif [[ $GIT_BRANCH -eq master ]]; then
     wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
-    $SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
+    SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
   else
     echo 'Unknown git branch specified, aborting!'
     exit 1
