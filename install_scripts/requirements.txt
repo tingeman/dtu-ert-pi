@@ -1,0 +1,13 @@
+# needed for general scheduling and
+# interaction with Raspberry Pi hats and boards
+pyyaml
+smbus2
+numpy
+croniter
+pandas
+netifaces 
+vcgencmd
+paramiko
+ipython 
+
+

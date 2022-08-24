@@ -1,0 +1,60 @@
+# Use absolute paths whenever possible
+# relative paths should start with './' and will be expanded relative to the location of the config file
+# The expansion algorithm will traverse dictionaries and lists only (but handles nested dicts and lists).
+
+
+INA219:
+    installed: True
+    i2c_bus: 2
+    shunt_resistance: 0.1
+    gpio_sda: 2
+    gpio_scl: 3
+    gpio_vcc: 67
+
+WITTYPI4:
+    installed: False
+    i2c_bus: None
+
+RELAY_BOARD:
+    gpio_reset: 82
+    gpio_set: 81
+
+TERRAMETER:
+    ip: "192.168.23.10"
+    port: 22
+    username: "root"
+    password: ""
+    alive_ping_timeout: 300
+    turn_on_threshold: 12
+    BOOT_DELAY: 200
+    alive_stop_file: '/mnt/sdcard/stop_alive_loop'
+    MEASURECOMPLETE_file: '/mnt/sdcard/from_terrameter/MEASURECOMPLETE'
+    stop_measure_wait_file: '/mnt/sdcard/stop_measure_wait_loop'
+    measure_wait_interval: 60 # 1 minut interval to check if measurements completed.
+
+SIM7600X_GPS:
+    installed: False
+    device: '/dev/ttyAMA0'
+    baud_rate: 115200
+    gpio_power: 6
+    power_toggle: False
+    
+SIM7600X_MODEM:
+    installed: False
+    device: '/dev/ttyUSB2'
+    baud_rate: 115200
+    gpio_power: 6
+    APN: 'iot.1nce.net'
+    
+logging:
+    logfile: '/mnt/sdcard/logs/logfile'
+    voltage_logger: '/mnt/sdcard/logs/supply_voltage.dat'
+    datefmt: "%Y-%m-%d %H:%M:%S(%z)"
+
+scheduling:
+    SCHEDULE_FILE: './scheduling/schedule.ert'
+    LAST_RUN_FILE: './scheduling/last_run.ert'
+    
+general:
+    hardware: 'IOT-GATE-iMX7'            # one of 'RaspberryPi', 'IOT-GATE-iMX7', 'generic'
+    gpio_access_mode: 'generic'          # one of 'RaspberryPi', 'generic'
