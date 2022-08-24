@@ -1,0 +1,12 @@
+[Unit]
+Description=AutoSSH tunnel service to create a portforward to BYG-CData1
+After=network-online.target
+
+[Service]
+Type=forking
+Environment="AUTOSSH_GATETIME=0"
+User=root
+ExecStart=/usr/bin/autossh -f -M 0 -o "ExitOnForwardFailure=yes" -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR PORT:127.0.0.1:22 USER@SERVER_IP -p 22 -i SSH_KEY
+
+[Install]
+WantedBy=multi-user.target
