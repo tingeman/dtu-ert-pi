@@ -25,18 +25,29 @@ configure_dhcp_server=true
 configure_modem_connection=true
 configure_autossh=true
 enable_I2C=true
+install_wittypi=true
 
 # PREDEFINED SETTINGS:
 
-# [GIT BRANCH]
+# [GIT BRANCH] --------------------------------------------
 GIT_BRANCH=develop      # master or develop
 
-# [AUTOSSH]
+# [AUTOSSH] -----------------------------------------------
 HOSTNAME=$(hostname)
 SSHUSER=$HOSTNAME
 PORT="2221"
 SERVER_IP="192.38.64.71"
 SSH_KEY=/root/.ssh/"$HOSTNAME"_sshkey
+
+# [WITTYPI] -----------------------------------------------
+WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
+WITTYPI_INSTALL_SCRIPT_URL="https://github.com/tingeman/Witty-Pi-4/raw/develop/Software/install.sh"
+WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip"
+# WITTYPI_DOWNLOAD_URL="https://www.uugear.com/repo/WittyPi4/LATEST"    # Uncomment to install UUGEAR latest version instead
+INSTALL_UWI=false     # Set following line to 'true' to install UUGEAR Web Interface
+UWI_DOWNLOAD_URL="https://www.uugear.com/repo/UWI/installUWI.sh"
+
+
 
 
 
@@ -225,9 +236,15 @@ systemctl restart console-setup
 
 
 # ==============================================================================
-# Install DTU-ERT-Pi
+# Install WittyPi
 # ==============================================================================
 
+
+if [[ $install_wittypi -eq true ]]; then
+  wget $WITTYPI_INSTALL_SCRIPT_URL -O "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
+  chmod +x "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
+  source "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
+fi
 
 
 # wget https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip -O "$TMP_DIR/wittyPi.zip"
