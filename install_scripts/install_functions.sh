@@ -199,7 +199,7 @@ f_configure_dhcp_server () {
     echo ">>> Installing dhcp server..."
     apt-get install -y isc-dhcp-server
 
-    echo
+   echo
     echo
     echo '>>> configuring dhcp server settings ...'
     # search on lines that are not commented
@@ -216,7 +216,7 @@ f_configure_dhcp_server () {
         echo "INTERFACESv4=\"eth0\"" >> /etc/default/isc-dhcp-server
     else
         echo "It seems dhcp server interface is already configured for eth0."
-    fi
+    fi 
 
 
     match=$(grep 'authoritative' /etc/dhcp/dhcpd.conf)
@@ -494,19 +494,37 @@ f_enable_I2C () {
         echo 'i2c-dev' >> /etc/modules
     fi
 
+    # Section does exist, do conditional insert
     i2c1=$(grep 'dtparam=i2c1=on' /boot/config.txt)
     i2c1=$(echo -e "$i2c1" | sed -e 's/^[[:space:]]*//')
-    if [[ -z "$i2c1" || "$i2c1" == "#"* ]]; then
+    if [[ -z "$i2c1" ]]; then
+        # if line is missing, insert it at end of file
         echo 'dtparam=i2c1=on' >> /boot/config.txt
+        echo "Inserted missing line:   dtparam=i2c1=on"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, uncomment it
+        sed -i "s/^\s*#\s*\(dtparam=i2c1=on.*\)/\1/" /boot/config.txt
+        echo "Found commented line and uncommented:  dtparam=i2c1=on"
     else
+        # if line exists, do nothing
         echo 'Seems i2c1 parameter already set, skip this step.'
     fi
 
+    # Section does exist, do conditional insert
     i2c_arm=$(grep 'dtparam=i2c_arm=on' /boot/config.txt)
     i2c_arm=$(echo -e "$i2c_arm" | sed -e 's/^[[:space:]]*//')
-    if [[ -z "$i2c_arm" || "$i2c_arm" == "#"* ]]; then
+    if [[ -z "$i2c_arm" ]]; then
+        # if line is missing, insert it at end of file
         echo 'dtparam=i2c_arm=on' >> /boot/config.txt
+        echo "Inserted missing line:   dtparam=i2c_arm=on"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, uncomment it
+        sed -i "s/^\s*#\s*\(dtparam=i2c_arm=on.*\)/\1/" /boot/config.txt
+        echo "Found commented line and uncommented:  dtparam=i2c_arm=on"
     else
-       echo 'Seems i2c_arm parameter already set, skip this step.'
+        # if line exists, do nothing
+        echo "Line already exists (do nothing):  dtparam=i2c_arm=on"
     fi
+
+
 }

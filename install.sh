@@ -131,11 +131,11 @@ f_enable_wifi $enable_bluetooth
 # Checking python version
 # ==============================================================================
 
-if [[ check_python_function -eq true ]]; then
+if [[ check_python_function == true ]]; then
     f_check_python_version
 fi
 
-if [[ -z install_git || install_git -eq true ]]; then
+if [[ -z install_git || install_git == true ]]; then
     echo
     echo
     echo ">>> Installing git..."
@@ -148,7 +148,7 @@ fi
 # Configuring time related settings
 # ==============================================================================
 
-if [[ configure_time_settings -eq true ]]; then
+if [[ configure_time_settings == true ]]; then
     f_configure_time_settings
 fi
 
@@ -156,7 +156,7 @@ fi
 # Setting up dhcp client settings
 # ==============================================================================
 
-if [[ configure_dhcp_client -eq true ]]; then
+if [[ configure_dhcp_client == true ]]; then
     f_configure_dhcp_client
 fi
 
@@ -164,7 +164,7 @@ fi
 # Installing and configuring dhcp server
 # ==============================================================================
 
-if [[ configure_dhcp_server -eq true ]]; then
+if [[ configure_dhcp_server == true ]]; then
     f_configure_dhcp_client
 fi
 
@@ -172,7 +172,7 @@ fi
 # Installing and configuring modem connection
 # ==============================================================================
 
-if [[ configure_modem_connection -eq true ]]; then
+if [[ configure_modem_connection == true ]]; then
     f_configure_modem_connection
 fi
 
@@ -180,7 +180,7 @@ fi
 # Installing and configuring autossh
 # ==============================================================================
 
-if [[ configure_autossh -eq true ]]; then
+if [[ configure_autossh == true ]]; then
     f_configure_autossh 
 fi
 
@@ -189,7 +189,7 @@ fi
 # Installing and configuring python dependencies
 # ==============================================================================
 
-if [[ install_python_dependencies -eq true ]]; then
+if [[ install_python_dependencies == true ]]; then
     echo
     echo
     echo ">>> Installing additional python dependencies using apt-get..."
@@ -212,7 +212,7 @@ fi
 # Installing and enabling I2C
 # ==============================================================================
 
-if [[ enable_I2C -eq true ]]; then
+if [[ enable_I2C == true ]]; then
     f_enable_I2C
 fi
 
