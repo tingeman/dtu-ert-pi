@@ -33,6 +33,11 @@ install_wittypi=true
 USB_MOUNT_POINT=/media/usb
 HOSTNAME=$(hostname)
 
+# Two crontab template files are available. The first for production use.
+# The second for stress testing the booting and shutdown of the Raspberry Pi.
+#CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template.txt
+CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdown.txt
+
 # [GIT BRANCH] --------------------------------------------
 GIT_BRANCH=develop      # master or develop
 
@@ -345,7 +350,15 @@ fi
 if [[ ! -d $USB_MOUNT_POINT/crontabs ]]; then
   mkdir -p $USB_MOUNT_POINT/crontabs
 fi
-
+if [[ ! -d $USB_MOUNT_POINT/from_terrameter ]]; then
+  mkdir -p $USB_MOUNT_POINT/from_terrameter
+fi
+#if [[ ! -d $USB_MOUNT_POINT/var/lib/ntp ]]; then
+#  mkdir -p $USB_MOUNT_POINT/var/lib/ntp
+#fi
+#if [[ ! -d $USB_MOUNT_POINT/var/tmp ]]; then
+#  mkdir -p $USB_MOUNT_POINT/var/tmp
+#fi
 
 echo ">>> Copying and modifying config_python.yml file..."
 # Modify settings in config_python.yml
@@ -372,6 +385,42 @@ echo ">>> Modifying wittyPi.conf file..."
 sed -i "{s#^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
 sed -i "{s#^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
 sed -i "{s#^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
+
+echo ">>> Copying schedule from turn_on_every_hour.wpi file ..."
+cp -f $WITTYPI_DIR/schedules/turn_on_every_hour.wpi $WITTYPI_DIR/schedule.wpi
+
+
+# echo ">>> Modifying /etc/ntp.conf ..."
+# 
+# match=$(grep 'driftfile' /etc/ntp.conf)
+# match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+# if [[ -z "$match" ]]; then
+#     # if line is missing, insert it at end of file
+#     echo "driftfile $USB_MOUNT_POINT/var/lib/ntp.drift" >> /etc/ntp.conf
+#     echo "Inserted missing line"
+# elif [[  "$match" == "#"* ]]; then
+#     # if line is commented, insert it after the commented line
+#     sed -i 's~^[[:space:]]*#[[:space:]]*driftfile.*~&\ndriftfile '"$USB_MOUNT_POINT"'/var/lib/ntp.drift~ }' /etc/ntp.conf
+#     echo "Found commented line, inserting new line after it"
+# else
+#     # if line exists, replace it
+#     sed -i 's#^driftfile.*#driftfile '"$USB_MOUNT_POINT"'/var/lib/ntp.drift# }' /etc/ntp.conf
+#     echo "Replaced existing line"
+# fi
+# 
+# touch "$USB_MOUNT_POINT"/var/lib/ntp.drift
+# 
+# 
+# cp /lib/systemd/system/ntp.service /etc/systemd/system
+
+
+echo ">>> Removing some packages that are not needed ..."
+apt remove -y dphys-swapfile
+apt remove -y --purge wolfram-engine triggerhappy xserver-common lightdm
+apt remove -y --purge bluez
+apt autoremove -y --purge
+
+
 
 echo 
 echo ">>> All logs etc configured for storage on usb drive, in preparation for making sdcard read-only."

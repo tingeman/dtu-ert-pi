@@ -11,6 +11,13 @@ else
   SH_SCRIPTS_DIR="$DTUERTPI_DIR"/sh_scripts
 fi
 
+if [[ -z $CRONTAB_TEMPLATE ]]; then
+  # Two crontab template files are available. The first for production use.
+  # The second for stress testing the booting and shutdown of the Raspberry Pi.
+  CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template.txt
+  #CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template_shutdown.txt
+fi
+
 # import settings
 source "$SH_SCRIPTS_DIR"/script_settings
 source "$WITTYPI_DIR"/wittyPi.conf
@@ -28,7 +35,7 @@ sed -i -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$SH_SCRIPTS_DIR"/cron_tmp
 echo >> "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 # reinsert AUTO CONFIGURE section from template file at end of crontab
-cat "$DTUERTPI_DIR"/sh_scripts/template_files/crontab_template.txt >> "$SH_SCRIPTS_DIR"/cron_tmp.txt
+cat "$CRONTAB_TEMPLATE" >> "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 # search and replace placeholder text
 sed -i "$SED_SECTION"' {s#WITTYPI_DIR#'"$WITTYPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
@@ -36,6 +43,8 @@ sed -i "$SED_SECTION"' {s#WITTYPI_DIR#'"$WITTYPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron
 sed -i "$SED_SECTION"' {s#SCHEDULE_LOG_FILE#'"$SCHEDULE_LOG_FILE"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 sed -i "$SED_SECTION"' {s#DTUERTPI_DIR#'"$DTUERTPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
+# Install crontab...
 cat "$SH_SCRIPTS_DIR"/cron_tmp.txt | /usr/bin/crontab -
 
+# Remove temporary file
 rm "$SH_SCRIPTS_DIR"/cron_tmp.txt
