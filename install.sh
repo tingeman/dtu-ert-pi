@@ -85,10 +85,10 @@ echo '>>> Downloading dtu-ert-pi code...'
 if [ -d "$DTUERTPI_DIR" ]; then
   echo 'Seems dtu-ert-pi is installed already, skip this step.'
 else
-  if [[ $GIT_BRANCH -eq develop ]]; then
+  if [[ $GIT_BRANCH == develop ]]; then
     wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/develop/main.zip -O "$TMP_DIR/dtu-ert-pi.zip"
     SRC_DIR="$TMP_DIR"/dtu-ert-pi-develop-main
-  elif [[ $GIT_BRANCH -eq master ]]; then
+  elif [[ $GIT_BRANCH == master ]]; then
     wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
     SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
   else
@@ -140,6 +140,8 @@ if [[ -z install_git || install_git -eq true ]]; then
     echo
     echo ">>> Installing git..."
     apt-get install -y git || ((ERR++))
+else
+    echo ">>> Skipping installation of git"
 fi
 
 # ==============================================================================
@@ -240,7 +242,7 @@ systemctl restart console-setup
 # ==============================================================================
 
 
-if [[ $install_wittypi -eq true ]]; then
+if [[ $install_wittypi == true ]]; then
   echo
   echo
   echo '>>> Installing Witty Pi 4 software...'
@@ -248,6 +250,8 @@ if [[ $install_wittypi -eq true ]]; then
   wget $WITTYPI_INSTALL_SCRIPT_URL -O "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
   chmod +x "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
   source "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
+else
+  echo ">>> Skipping installation of Witty Pi 4 software"
 fi
 
 

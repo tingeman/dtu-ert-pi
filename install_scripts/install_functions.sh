@@ -5,7 +5,7 @@
 f_enable_bluetooth () {
     echo
     echo
-    if [[ -z $1  ||  $1 -eq false ]]; then
+    if [[ -z $1  ||  $1 == false ]]; then
         echo '>>> Disabling bluetooth in /boot/config.txt'
         match=$(grep 'dtoverlay=disable-bt' /boot/config.txt)
         match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
@@ -32,7 +32,7 @@ f_enable_bluetooth () {
 f_enable_wifi () {
     echo
     echo
-    if [[ -z $1  ||  $1 -eq true ]]; then
+    if [[ -z $1  ||  $1 == true ]]; then
         echo '>>> Enabling wifi in /boot/config.txt'
         match=$(grep 'dtoverlay=disable-wifi' /boot/config.txt)
         match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
