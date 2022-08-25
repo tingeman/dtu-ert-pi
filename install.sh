@@ -241,6 +241,10 @@ systemctl restart console-setup
 
 
 if [[ $install_wittypi -eq true ]]; then
+  echo
+  echo
+  echo '>>> Installing Witty Pi 4 software...'
+  echo
   wget $WITTYPI_INSTALL_SCRIPT_URL -O "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
   chmod +x "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
   source "$INSTALL_SCRIPTS_DIR"/wittypi_install.sh
