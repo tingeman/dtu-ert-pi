@@ -1,0 +1,39 @@
+# script_settings defines all necessary variables used in 
+# scripts throughout.
+# There should be no need to change settings anywhere else.
+
+DTUERTPI_DIR="/root/dtu-ert-pi"
+WITTYPI_DIR="/root/wittypi"
+
+USB_MOUNT_POINT=/media/usb
+RW_BASE_DIR=$USB_MOUNT_POINT
+
+LOG_DIR="$RW_BASE_DIR"/logs
+CRONTABDIR="$RW_BASE_DIR"/crontabs
+
+HOME="/root"
+
+# Home of echo, grep, sh, sleep, touch
+BIN="/bin"
+
+# Home of awk, dc, expr, killall, tail, tr, uniq...
+USRBIN="/usr/bin"
+
+# Source and destination for upload
+UPLSOURCEDIR="$RW_BASE_DIR"/from_terrameter
+UPLDESTDIR="/cygdrive/d/data/artek/stations/$(hostname)/"
+
+# ssh and scp commands
+HOSTNAME=$(hostname)
+SSHUSER=$HOSTNAME
+SERVER_IP="xxx.xxx.xxx.xxx"
+PORT="xx"
+
+SSHKEY=$HOME/.ssh/"$HOSTNAME"_sshkey
+SERVER="$SSHUSER"@"$SERVER_IP"
+SSH="$USRBIN/ssh -i $SSHKEY $SSHUSER@$SERVER_IP -p $PORT"
+SCP="$USRBIN/scp -C -i $PRIVATEKEY"
+
+# MODEM
+MODEMTTYDEV="/dev/ttyUSB2"
+

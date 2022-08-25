@@ -436,23 +436,23 @@ f_configure_autossh () {
         mkdir /root/.ssh
     fi
 
-    if [[ -f $SSH_KEY ]]; then
-       echo "It seems ssh key already exists ($SSH_KEY)... skipping this step."
+    if [[ -f $SSHKEY ]]; then
+       echo "It seems ssh key already exists ($SSHKEY)... skipping this step."
     else
-        ssh-keygen -b 2048 -t rsa -f $SSH_KEY -q -N ""
-        echo "Created ssh key: $SSH_KEY"
+        ssh-keygen -b 2048 -t rsa -f $SSHKEY -q -N ""
+        echo "Created ssh key: $SSHKEY"
     fi
 
     # copy template script
     cp "$INSTALL_SCRIPTS_DIR"/template_files/autossh-byg-cdata1-tunnel.service /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     # do replacements according to settings
-    sed -i '/ExecStart=\/usr\/bin\/autossh/s/PORT/'"$PORT"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    sed -i '/ExecStart=\/usr\/bin\/autossh/s/PORT/'"$FWD_PORT"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
     sed -i '/ExecStart=\/usr\/bin\/autossh/s/USER/'"$SSHUSER"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
     sed -i '/ExecStart=\/usr\/bin\/autossh/s/SERVER_IP/'"$SERVER_IP"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     # see this https://stackoverflow.com/a/27787551/1760389 for explanation of using ~ below
-    sed -i '/ExecStart=\/usr\/bin\/autossh/s~SSH_KEY~'"$SSH_KEY"'~' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    sed -i '/ExecStart=\/usr\/bin\/autossh/s~SSHKEY~'"$SSHKEY"'~' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     echo "Created /etc/systemd/system/autossh-byg-cdata1-tunnel.service"
 

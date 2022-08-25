@@ -7,11 +7,11 @@
 #
 
 # target directories
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-INSTALL_SCRIPTS_DIR="$CURRENT_DIR/install_files"
+BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+INSTALL_SCRIPTS_DIR="$BASE_DIR/install_files"
 TMP_DIR="$INSTALL_SCRIPTS_DIR/tmp"
-WITTYPI_DIR="$CURRENT_DIR/wittypi"
-DTUERTPI_DIR="$CURRENT_DIR/dtu-ert-pi"
+WITTYPI_DIR="$BASE_DIR/wittypi"
+DTUERTPI_DIR="$BASE_DIR/dtu-ert-pi"
 
 # RUN FLAGS
 enable_bluetooth=false
@@ -29,15 +29,21 @@ install_wittypi=true
 
 # PREDEFINED SETTINGS:
 
+# [GENERAL] -----------------------------------------------
+USB_MOUNT_POINT=/media/usb
+HOSTNAME=$(hostname)
+
 # [GIT BRANCH] --------------------------------------------
 GIT_BRANCH=develop      # master or develop
 
-# [AUTOSSH] -----------------------------------------------
-HOSTNAME=$(hostname)
-SSHUSER=$HOSTNAME
-PORT="2221"
+# [UPLOAD SERVER] -----------------------------------------
 SERVER_IP="192.38.64.71"
-SSH_KEY=/root/.ssh/"$HOSTNAME"_sshkey
+PORT="22"
+
+# [AUTOSSH] -----------------------------------------
+SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
+SSHUSER=$HOSTNAME
+FWD_PORT="2221"
 
 # [WITTYPI] -----------------------------------------------
 WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
@@ -58,6 +64,22 @@ echo '|                                                                         
 echo '================================================================================'
 # Strongly inspired by WittyPi install script :-)
 
+
+# ==============================================================================
+# Initial checks
+# ==============================================================================
+
+
+if grep -qs "$USB_MOUNT_POINT " /proc/mounts; then
+    echo ">>> USB drive is mounted... good!"
+else
+    echo "USB drive is not mounted. Please mount at $USB_MOUNT_POINT and rerun this script"
+    exit 1
+fi
+
+if [[ check_python_function == true ]]; then
+    f_check_python_version
+fi
 
 
 # ==============================================================================
@@ -125,24 +147,8 @@ fi
 # ==============================================================================
 
 f_enable_bluetooth $enable_bluetooth
-f_enable_wifi $enable_bluetooth
+f_enable_wifi $enable_wifi
 
-# ==============================================================================
-# Checking python version
-# ==============================================================================
-
-if [[ check_python_function == true ]]; then
-    f_check_python_version
-fi
-
-if [[ -z install_git || install_git == true ]]; then
-    echo
-    echo
-    echo ">>> Installing git..."
-    apt-get install -y git || ((ERR++))
-else
-    echo ">>> Skipping installation of git"
-fi
 
 # ==============================================================================
 # Configuring time related settings
@@ -207,6 +213,14 @@ if [[ $install_python_dependencies == true ]]; then
     python3 -m pip install ipython pyserial ipdb
 fi
 
+if [[ -z install_git || install_git == true ]]; then
+    echo
+    echo
+    echo ">>> Installing git..."
+    apt-get install -y git || ((ERR++))
+else
+    echo ">>> Skipping installation of git"
+fi
 
 # ==============================================================================
 # Installing and enabling I2C
@@ -315,6 +329,65 @@ fi
 
 # # install UUGear Web Interface
 # curl https://www.uugear.com/repo/UWI/installUWI.sh | bash
+
+#
+
+
+# ==============================================================================
+# Configure settings files
+# ==============================================================================
+
+
+echo ">>> Creating folders for RW access on usb drive..."
+if [[ ! -d $USB_MOUNT_POINT/logs ]]; then
+  mkdir -p $USB_MOUNT_POINT/logs
+fi
+if [[ ! -d $USB_MOUNT_POINT/crontabs ]]; then
+  mkdir -p $USB_MOUNT_POINT/crontabs
+fi
+
+
+echo ">>> Copying and modifying config_python.yml file..."
+# Modify settings in config_python.yml
+cp -f $INSTALL_SCRIPTS_DIR/template_files/python_config_rpi4.yml $DTUERTPI_DIR/python_config.yml
+
+# search and replace placeholder text
+sed -i "{s#\$USB_MOUNT_POINT#$USB_MOUNT_POINT#}" $DTUERTPI_DIR/python_config.yml
+
+
+echo ">>> Copying and modifying script_settings file..."
+# Modify settings in script_settings.conf
+cp -f $INSTALL_SCRIPTS_DIR/template_files/script_settings_rpi4 $DTUERTPI_DIR/sh_scripts/script_settings
+
+# search and replace placeholder text
+sed -i "{s#\^[[:space:]]*DTUERTPI_DIR=.*#DTUERTPI_DIR=\"$DTUERTPI_DIR\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#\^[[:space:]]*WITTYPI_DIR=.*#WITTYPI_DIR=\"$WITTYPI_DIR\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#\^[[:space:]]*USB_MOUNT_POINT=.*#USB_MOUNT_POINT=\"$USB_MOUNT_POINT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#\^[[:space:]]*SERVER_IP=.*#SERVER_IP=\"$SERVER_IP\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#\^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+
+
+echo ">>> Modifying wittyPi.conf file..."
+# Modify settings in wittyPi.conf
+sed -i "{s#\^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
+sed -i "{s#\^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
+sed -i "{s#\^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
+
+echo 
+echo ">>> All logs etc configured for storage on usb drive, in preparation for making sdcard read-only."
+echo 
+
+# ==============================================================================
+# Set crontab
+# ==============================================================================
+
+source $DTUERTPI_DIR/sh_scripts/auto_configure_crontab.sh
+
+
+# ==============================================================================
+# Clean up
+# ==============================================================================
+
 
 echo
 if [ $ERR -eq 0 ]; then
