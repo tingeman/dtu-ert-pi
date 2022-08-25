@@ -61,6 +61,12 @@ f_enable_wifi () {
 # ==============================================================================
 
 f_check_python_version() {
+
+    # Get bc for bash calculations, if not installed
+    if [[ -z $(which bc) ]]; then
+        apt-get install bc
+    fi
+
     # check if python is installed
     # from https://stackoverflow.com/a/33183884/1760389
 
@@ -426,15 +432,15 @@ f_configure_autossh () {
     echo
     echo
     echo '>>> Generating ssh public-private key relationship...'
-    mkdir /root/.ssh
+    if [[ ! -d /root/.ssh ]]; then
+        mkdir /root/.ssh
+    fi
 
     if [[ -f $SSH_KEY ]]; then
-       echo $SSH_KEY
-       ls -l $SSH_KEY
-       echo "It seems ssh key already exists... skipping this step."
+       echo "It seems ssh key already exists ($SSH_KEY)... skipping this step."
     else
         ssh-keygen -b 2048 -t rsa -f $SSH_KEY -q -N ""
-        echo "Created ssh key."
+        echo "Created ssh key: $SSH_KEY"
     fi
 
     # copy template script
