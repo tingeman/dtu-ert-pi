@@ -213,7 +213,7 @@ if [[ $install_python_dependencies == true ]]; then
     python3 -m pip install ipython pyserial ipdb
 fi
 
-if [[ -z install_git || install_git == true ]]; then
+if [[ -z install_git || $install_git == true ]]; then
     echo
     echo
     echo ">>> Installing git..."
@@ -360,18 +360,18 @@ echo ">>> Copying and modifying script_settings file..."
 cp -f $INSTALL_SCRIPTS_DIR/template_files/script_settings_rpi4 $DTUERTPI_DIR/sh_scripts/script_settings
 
 # search and replace placeholder text
-sed -i "{s#\^[[:space:]]*DTUERTPI_DIR=.*#DTUERTPI_DIR=\"$DTUERTPI_DIR\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
-sed -i "{s#\^[[:space:]]*WITTYPI_DIR=.*#WITTYPI_DIR=\"$WITTYPI_DIR\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
-sed -i "{s#\^[[:space:]]*USB_MOUNT_POINT=.*#USB_MOUNT_POINT=\"$USB_MOUNT_POINT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
-sed -i "{s#\^[[:space:]]*SERVER_IP=.*#SERVER_IP=\"$SERVER_IP\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
-sed -i "{s#\^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#^[[:space:]]*DTUERTPI_DIR=.*#DTUERTPI_DIR=\"$DTUERTPI_DIR\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#^[[:space:]]*WITTYPI_DIR=.*#WITTYPI_DIR=\"$WITTYPI_DIR\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#^[[:space:]]*USB_MOUNT_POINT=.*#USB_MOUNT_POINT=\"$USB_MOUNT_POINT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#^[[:space:]]*SERVER_IP=.*#SERVER_IP=\"$SERVER_IP\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
+sed -i "{s#^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
 
 
 echo ">>> Modifying wittyPi.conf file..."
 # Modify settings in wittyPi.conf
-sed -i "{s#\^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
-sed -i "{s#\^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
-sed -i "{s#\^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
+sed -i "{s#^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
+sed -i "{s#^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
+sed -i "{s#^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
 
 echo 
 echo ">>> All logs etc configured for storage on usb drive, in preparation for making sdcard read-only."

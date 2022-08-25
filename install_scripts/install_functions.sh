@@ -37,7 +37,7 @@ f_enable_wifi () {
         match=$(grep 'dtoverlay=disable-wifi' /boot/config.txt)
         match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
         if [[ -z "$match" || "$match" == "#"* ]]; then
-            echo 'It seems wifi is already disabled.'
+            echo 'It seems wifi is already enabled.'
         else
             # if disable command is present, comment it
             sed "s/^[[:space:]](dtoverlay=disable-wifi.*)/# \1/"

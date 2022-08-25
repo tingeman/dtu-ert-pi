@@ -20,14 +20,16 @@ source "$WITTYPI_DIR"/wittyPi.conf
 
 SED_SECTION='/^.*BEGIN AUTO CONFIGURE SECTION.*$/,/END AUTO CONFIGURE SECTION.*$/'
 # remove AUTO CONFIGURE section
-sed -i "$SED_SECTION"'d' cron_tmp.txt
+sed -i "$SED_SECTION"'d' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 # reinsert AUTOCONFIGURE section from template file
-cat "$DTUERTPI_DIR"/sh_scripts/template_files/crontab_template.txt >> cron_tmp.txt
+cat "$DTUERTPI_DIR"/sh_scripts/template_files/crontab_template.txt >> "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 # search and replace placeholder text
-sed -i "$SED_SECTION"' {s#WITTYPI_DIR#'"$WITTYPI_DIR"'#}' cron_tmp.txt
-sed -i "$SED_SECTION"' {s#WITTYPI_LOG_FILE#'"$WITTYPI_LOG_FILE"'#}' cron_tmp.txt
-sed -i "$SED_SECTION"' {s#DTUERTPI_DIR#'"$DTUERTPI_DIR"'#}' cron_tmp.txt
+sed -i "$SED_SECTION"' {s#WITTYPI_DIR#'"$WITTYPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
+sed -i "$SED_SECTION"' {s#WITTYPI_LOG_FILE#'"$WITTYPI_LOG_FILE"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
+sed -i "$SED_SECTION"' {s#DTUERTPI_DIR#'"$DTUERTPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 cat "$SH_SCRIPTS_DIR"/cron_tmp.txt | /usr/bin/crontab -
+
+rm "$SH_SCRIPTS_DIR"/cron_tmp.txt
