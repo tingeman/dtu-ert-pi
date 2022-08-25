@@ -22,12 +22,18 @@ SED_SECTION='/^.*BEGIN AUTO CONFIGURE SECTION.*$/,/END AUTO CONFIGURE SECTION.*$
 # remove AUTO CONFIGURE section
 sed -i "$SED_SECTION"'d' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
-# reinsert AUTOCONFIGURE section from template file
+# remove last line of file if blank
+sed -i -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
+# then add a blank line before AUTO CONFIGURE section
+echo >> "$SH_SCRIPTS_DIR"/cron_tmp.txt
+
+# reinsert AUTO CONFIGURE section from template file at end of crontab
 cat "$DTUERTPI_DIR"/sh_scripts/template_files/crontab_template.txt >> "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 # search and replace placeholder text
 sed -i "$SED_SECTION"' {s#WITTYPI_DIR#'"$WITTYPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
-sed -i "$SED_SECTION"' {s#WITTYPI_LOG_FILE#'"$WITTYPI_LOG_FILE"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
+#sed -i "$SED_SECTION"' {s#WITTYPI_LOG_FILE#'"$WITTYPI_LOG_FILE"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
+sed -i "$SED_SECTION"' {s#SCHEDULE_LOG_FILE#'"$SCHEDULE_LOG_FILE"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 sed -i "$SED_SECTION"' {s#DTUERTPI_DIR#'"$DTUERTPI_DIR"'#}' "$SH_SCRIPTS_DIR"/cron_tmp.txt
 
 cat "$SH_SCRIPTS_DIR"/cron_tmp.txt | /usr/bin/crontab -

@@ -1,5 +1,3 @@
-
-
 # --- BEGIN AUTO CONFIGURE SECTION ----------------------------------------------
 
 # Anything within the AUTO CONFIGURE SECRION will be replaced if
@@ -19,7 +17,7 @@
 
 # Reschedule next boot every 15 min
 # Workaround for overdue startup time causing an i2c bus lockup
-*/15 *  *  *  *    /usr/bin/bash WITTYPI_DIR/runScript.sh 1 revise >> WITTYPI_LOG_FILE
+*/15 *  *  *  *    /usr/bin/bash WITTYPI_DIR/runScript.sh 1 revise >> SCHEDULE_LOG_FILE
 
 # log the battery supply voltage
 */5  *  *  *  *    /usr/bin/python3 DTUERTPI_DIR/io_scripts/log_voltage.py
@@ -29,6 +27,5 @@
 
 # Check in with alive server
 @reboot            sleep 240 && /usr/bin/python3 DTUERTPI_DIR/send_alive.py "rebooted"
-
 
 # --- END AUTO CONFIGURE SECTION ----------------------------------------------
