@@ -95,15 +95,27 @@ else
     rm -r $SRC_DIR
   fi
   unzip -q "$TMP_DIR"/dtu-ert-pi.zip -d "$TMP_DIR"/ 
-  cp -rf "$SRC_DIR"/install_scripts/* "$INSTALL_SCRIPTS_DIR"     # OK
-  cp -rf "$SRC_DIR"/install.sh "$BASE_DIR"/install.sh        # OK
+  cp -rf "$SRC_DIR"/install_scripts/* "$INSTALL_SCRIPTS_DIR"   
+
+  input=""
+  while [ "$input" != yes ] && [ "$input" != no ]
+  do
+    read -rp 'Overwrite main install.sh script? [yes/no]: '  input
+  done
+
+  if [[ $input == yes ]]; then
+    cp -rf "$SRC_DIR"/install.sh "$BASE_DIR"/install.sh        
+    chmod -R +x "$BASE_DIR"/install.sh
+    echo "The main install.sh was not REPLACED."
+  else
+    echo "The main install.sh was not updated."
   rsync -avm --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/DTU_ERT_Pi "$DTUERTPI_DIR"
+
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
   chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
   chown $USER:$(id -g -n $USER) "$BASE_DIR"/install.sh || ((ERR++))
   chmod -R +x "$INSTALL_SCRIPTS_DIR"/*.sh
   chmod -R +x "$DTUERTPI_DIR"/*.sh
-  chmod -R +x "$BASE_DIR"/install.sh
   sleep 2
 fi
 
