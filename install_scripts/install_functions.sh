@@ -75,7 +75,7 @@ f_check_python_version() {
     if [[ -z "$python_version" ]]; then
         echo "Python is not installed!" 
         echo "Please install python version 3.9 or higher and rerun this script."
-        exit 1
+        ((ERR++))
     fi
 
     # Set space as the delimiter
@@ -456,10 +456,16 @@ f_configure_autossh () {
 
     echo "Created /etc/systemd/system/autossh-byg-cdata1-tunnel.service"
 
-    systemctl daemon-reload
-    systemctl start autossh-byg-cdata1-tunnel.service
-    systemctl enable autossh-byg-cdata1-tunnel.service
-    echo "Started the autossh-byg-cdata1-tunnel.service"
+    if systemctl is-active --quiet autossh-byg-cdata1-tunnel.service; then
+        echo ">>> Changes made to the autossh-byg-cdata1-tunnel.service."
+        echo ">>> They will take effect at next reboot."
+    else
+        systemctl daemon-reload
+        systemctl start autossh-byg-cdata1-tunnel.service
+        systemctl enable autossh-byg-cdata1-tunnel.service
+        echo "Started the autossh-byg-cdata1-tunnel.service"
+    fi
+
     echo " "
     echo "NB: You must manually set up the server to accept the ssh connection!"
 }
