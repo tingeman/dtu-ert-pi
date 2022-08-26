@@ -109,6 +109,10 @@ else
     echo "The main install.sh was not REPLACED."
   else
     echo "The main install.sh was not updated."
+  fi
+  
+  echo
+
   rsync -avm --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/DTU_ERT_Pi "$DTUERTPI_DIR"
 
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
