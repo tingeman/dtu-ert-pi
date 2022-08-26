@@ -75,53 +75,51 @@ chown -R $USER:$(id -g -n $USER) "$TMP_DIR" || ((ERR++))
 echo 
 echo
 echo '>>> Downloading dtu-ert-pi code...'
-if [[ -d "$DTUERTPI_DIR" ]]; then
-  echo 'Seems dtu-ert-pi is installed already, skip this step.'
-else
-  if [[ -f "$TMP_DIR/dtu-ert-pi.zip" ]]; then 
-    rm -y "$TMP_DIR/dtu-ert-pi.zip"
-  fi
-  if [[ $GIT_BRANCH == develop ]]; then
-    wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/develop/main.zip -O "$TMP_DIR/dtu-ert-pi.zip"
-    SRC_DIR="$TMP_DIR"/dtu-ert-pi-develop-main
-  elif [[ $GIT_BRANCH == master ]]; then
-    wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
-    SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
-  else
-    echo 'Unknown git branch specified, aborting!'
-    exit 1
-  fi
-  if [[ -d $SRC_DIR ]]; then
-    rm -r $SRC_DIR
-  fi
-  unzip -q "$TMP_DIR"/dtu-ert-pi.zip -d "$TMP_DIR"/ 
-  cp -rf "$SRC_DIR"/install_scripts/* "$INSTALL_SCRIPTS_DIR"   
 
-  input=""
-  while [ "$input" != yes ] && [ "$input" != no ]
-  do
-    read -rp 'Overwrite main install.sh script? [yes/no]: '  input
-  done
-
-  if [[ $input == yes ]]; then
-    cp -rf "$SRC_DIR"/install.sh "$BASE_DIR"/install.sh        
-    chmod -R +x "$BASE_DIR"/install.sh
-    echo "The main install.sh was not REPLACED."
-  else
-    echo "The main install.sh was not updated."
-  fi
-  
-  echo
-
-  rsync -avm --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/DTU_ERT_Pi "$DTUERTPI_DIR"
-
-  chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
-  chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
-  chown $USER:$(id -g -n $USER) "$BASE_DIR"/install.sh || ((ERR++))
-  chmod -R +x "$INSTALL_SCRIPTS_DIR"/*.sh
-  chmod -R +x "$DTUERTPI_DIR"/*.sh
-  sleep 2
+if [[ -f "$TMP_DIR/dtu-ert-pi.zip" ]]; then 
+  rm -y "$TMP_DIR/dtu-ert-pi.zip"
 fi
+if [[ $GIT_BRANCH == develop ]]; then
+  wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/develop/main.zip -O "$TMP_DIR/dtu-ert-pi.zip"
+  SRC_DIR="$TMP_DIR"/dtu-ert-pi-develop-main
+elif [[ $GIT_BRANCH == master ]]; then
+  wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
+  SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
+else
+  echo 'Unknown git branch specified, aborting!'
+  exit 1
+fi
+if [[ -d $SRC_DIR ]]; then
+  rm -r $SRC_DIR
+fi
+unzip -q "$TMP_DIR"/dtu-ert-pi.zip -d "$TMP_DIR"/ 
+cp -rf "$SRC_DIR"/install_scripts/* "$INSTALL_SCRIPTS_DIR"   
+
+input=""
+while [ "$input" != yes ] && [ "$input" != no ]
+do
+  read -rp 'Overwrite main install.sh script? [yes/no]: '  input
+done
+
+if [[ $input == yes ]]; then
+  cp -rf "$SRC_DIR"/install.sh "$BASE_DIR"/install.sh        
+  chmod -R +x "$BASE_DIR"/install.sh
+  echo "The main install.sh was not REPLACED."
+else
+  echo "The main install.sh was not updated."
+fi
+
+echo
+
+rsync -avm --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/DTU_ERT_Pi "$DTUERTPI_DIR"
+
+chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
+chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
+chown $USER:$(id -g -n $USER) "$BASE_DIR"/install.sh || ((ERR++))
+chmod -R +x "$INSTALL_SCRIPTS_DIR"/*.sh
+chmod -R +x "$DTUERTPI_DIR"/*.sh
+sleep 2
+
 
 echo
 if [ $ERR -eq 0 ]; then
