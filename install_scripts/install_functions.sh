@@ -459,6 +459,11 @@ f_configure_autossh () {
     if systemctl is-active --quiet autossh-byg-cdata1-tunnel.service; then
         echo ">>> Changes made to the autossh-byg-cdata1-tunnel.service."
         echo ">>> They will take effect at next reboot."
+        echo
+        echo "or try: 
+        echo "    systemctl stop autossh-byg-cdata1-tunnel.service"
+        echo "    systemctl daemon-reload"
+        echo "    systemctl start autossh-byg-cdata1-tunnel.service"
     else
         systemctl daemon-reload
         systemctl start autossh-byg-cdata1-tunnel.service

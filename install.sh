@@ -140,7 +140,7 @@ else
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
   chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
   chmod -R +x "$INSTALL_SCRIPTS_DIR"/*.sh
-  chmod -R +x "$DTUERTPI_DIR"/*.sh
+  chmod -R +x "$DTUERTPI_DIR"/sh_scripts/*.sh
   sleep 2
 fi
 

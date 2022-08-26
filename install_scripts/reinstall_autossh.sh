@@ -60,9 +60,7 @@ fi
 # Installing and configuring autossh
 # ==============================================================================
 
-if [[ $configure_autossh == true ]]; then
-    f_configure_autossh 
-fi
+f_configure_autossh 
 
 
 echo
