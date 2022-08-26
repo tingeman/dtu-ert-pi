@@ -135,7 +135,7 @@ else
   fi
   unzip -q "$TMP_DIR"/dtu-ert-pi.zip -d "$TMP_DIR"/ 
   cp -rf "$SRC_DIR"/install_scripts/* "$INSTALL_SCRIPTS_DIR"
-  cp -rf "$SRC_DIR"/DTU_ERT_Pi "$DTUERTPI_DIR"
+  cp -rf "$SRC_DIR"/dtu-ert-pi "$DTUERTPI_DIR"
   #rm -r "$SRC_DIR" "$TMP_DIR"/dtu-ert-pi.zip
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
   chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
