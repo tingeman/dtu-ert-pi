@@ -74,16 +74,30 @@ echo '==========================================================================
 # Initial checks
 # ==============================================================================
 
+# error counter
+ERR=0
+
+# check if sudo is used
+if [ "$(id -u)" != 0 ]; then
+  echo
+  echo '>>> Sorry, you need to run this script with sudo'
+  ((ERR++))
+fi
 
 if grep -qs "$USB_MOUNT_POINT " /proc/mounts; then
     echo ">>> USB drive is mounted... good!"
 else
-    echo "USB drive is not mounted. Please mount at $USB_MOUNT_POINT and rerun this script"
-    exit 1
+    echo ">>> USB drive is not mounted. Please mount at $USB_MOUNT_POINT and rerun this script"
+    ((ERR++))
 fi
 
 if [[ check_python_function == true ]]; then
     f_check_python_version
+fi
+
+if [[ $ERR -ne 0 ]]; then
+  echo '>>> Fix issues, and rerun script ...'
+  exit 1
 fi
 
 
@@ -99,9 +113,6 @@ fi
 # develop/main branch version:
 # wget https://github.com/tingeman/dtu-ert-pi/raw/develop/main/install.sh
 
-
-# error counter
-ERR=0
 
 mkdir -p "$TMP_DIR"
 chown -R $USER:$(id -g -n $USER) "$TMP_DIR" || ((ERR++))
@@ -128,21 +139,14 @@ else
   #rm -r "$SRC_DIR" "$TMP_DIR"/dtu-ert-pi.zip
   chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
   chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
-  chmod +x "$INSTALL_SCRIPTS_DIR"/*.sh
+  chmod -R +x "$INSTALL_SCRIPTS_DIR"/*.sh
+  chmod -R +x "$DTUERTPI_DIR"/*.sh
   sleep 2
 fi
 
 
 # include all the functions handling installations
 . $INSTALL_SCRIPTS_DIR/install_functions.sh
-
-
-# check if sudo is used
-if [ "$(id -u)" != 0 ]; then
-  echo
-  echo 'Sorry, you need to run this script with sudo'
-  exit 1
-fi
 
 
 
