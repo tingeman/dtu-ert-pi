@@ -8,7 +8,7 @@
 
 # target directories
 INSTALL_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BASE_DIR="$INSTALL_SCRIPTS_DIR/.."
+BASE_DIR=$(cd "$INSTALL_SCRIPTS_DIR/.." && pwd)
 TMP_DIR="$INSTALL_SCRIPTS_DIR/tmp"
 WITTYPI_DIR="$BASE_DIR/wittypi"
 DTUERTPI_DIR="$BASE_DIR/dtu-ert-pi"
@@ -77,7 +77,7 @@ echo
 echo '>>> Downloading dtu-ert-pi code...'
 
 if [[ -f "$TMP_DIR/dtu-ert-pi.zip" ]]; then 
-  rm -y "$TMP_DIR/dtu-ert-pi.zip"
+  rm "$TMP_DIR/dtu-ert-pi.zip"
 fi
 if [[ $GIT_BRANCH == develop ]]; then
   wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/develop/main.zip -O "$TMP_DIR/dtu-ert-pi.zip"
