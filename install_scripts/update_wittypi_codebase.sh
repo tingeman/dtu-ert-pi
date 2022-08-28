@@ -92,7 +92,7 @@ if [[ -d $SRC_DIR ]]; then
   rm -r $SRC_DIR
 fi
 unzip -q "$TMP_DIR"/wittyPi.zip -d "$TMP_DIR"/ 
-cp -rf "$SRC_DIR"/Software/wittypi*.sh "$WITTYPI_DIR"   
+cp -rf "$SRC_DIR"/Software/wittypi/*.sh "$WITTYPI_DIR"   
 
 input=""
 while [ "$input" != yes ] && [ "$input" != no ]
@@ -113,7 +113,7 @@ echo
 chown -R $USER:$(id -g -n $USER) "$WITTYPI_DIR" || ((ERR++))
 chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
 chmod -R +x "$INSTALL_SCRIPTS_DIR"/*.sh
-chmod -R +x "$WITTYPI_DIR"/sh_scripts/*.sh
+chmod -R +x "$WITTYPI_DIR"/*.sh
 sleep 2
 
 
