@@ -26,6 +26,7 @@ configure_modem_connection=true
 configure_autossh=true
 enable_I2C=true
 install_wittypi=true
+configure_wittypi=true 
 
 # PREDEFINED SETTINGS:
 
@@ -58,6 +59,9 @@ WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/
 INSTALL_UWI=false     # Set following line to 'true' to install UUGEAR Web Interface
 UWI_DOWNLOAD_URL="https://www.uugear.com/repo/UWI/installUWI.sh"
 
+WITTYPI_DEFAULT_POWER_STATE = 1      # 1 = TURN ON; 0 = STAY OFF, when power is connected
+WITTYPI_LOW_VOLTAGE_THRESHOLD = 55   # threshold voltage * 10 (as integer)
+WITTYPI_RECOVERY_VOLTAGE_THRESHOLD = 100   # threshold voltage * 10 (as integer)
 
 
 
@@ -384,14 +388,20 @@ sed -i "{s#^[[:space:]]*SERVER_IP=.*#SERVER_IP=\"$SERVER_IP\"#}" $DTUERTPI_DIR/s
 sed -i "{s#^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
 
 
-echo ">>> Modifying wittyPi.conf file..."
-# Modify settings in wittyPi.conf
-sed -i "{s#^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
-sed -i "{s#^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
-sed -i "{s#^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
+# ==============================================================================
+# Configure witty pi functionality
+# ==============================================================================
 
-echo ">>> Copying schedule from turn_on_every_hour.wpi file ..."
-cp -f $WITTYPI_DIR/schedules/turn_on_every_hour.wpi $WITTYPI_DIR/schedule.wpi
+
+if [[ $configure_wittypi == true ]]; then
+  echo
+  echo
+  echo '>>> Configuring Witty Pi 4 ...'
+  echo
+  f_configure_wittypi
+else
+  echo ">>> Skipping configuration of Witty Pi 4 settings"
+fi
 
 
 # echo ">>> Modifying /etc/ntp.conf ..."
@@ -417,7 +427,7 @@ cp -f $WITTYPI_DIR/schedules/turn_on_every_hour.wpi $WITTYPI_DIR/schedule.wpi
 # 
 # cp /lib/systemd/system/ntp.service /etc/systemd/system
 
-
+echo
 echo ">>> Removing some packages that are not needed ..."
 apt remove -y dphys-swapfile
 apt remove -y --purge wolfram-engine triggerhappy xserver-common lightdm

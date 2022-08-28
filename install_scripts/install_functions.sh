@@ -460,7 +460,7 @@ f_configure_autossh () {
         echo ">>> Changes made to the autossh-byg-cdata1-tunnel.service."
         echo ">>> They will take effect at next reboot."
         echo
-        echo "or try: 
+        echo "or try:" 
         echo "    systemctl stop autossh-byg-cdata1-tunnel.service"
         echo "    systemctl daemon-reload"
         echo "    systemctl start autossh-byg-cdata1-tunnel.service"
@@ -538,4 +538,41 @@ f_enable_I2C () {
     fi
 
 
+}
+
+
+
+# ==============================================================================
+# Configure witty pi functionality
+# ==============================================================================
+
+
+f_configure_wittypi () {
+    source $WITTYPI_DIR/utilities.sh
+
+    echo ">>> Modifying wittyPi.conf file..."
+    # Modify settings in wittyPi.conf
+    sed -i "{s#^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
+    sed -i "{s#^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
+    sed -i "{s#^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
+
+    echo ">>> Copying schedule from turn_on_every_hour.wpi file ..."
+    cp -f $WITTYPI_DIR/schedules/turn_on_every_hour.wpi $WITTYPI_DIR/schedule.wpi
+
+
+    if [[ $WITTYPI_DEFAULT_POWER_STATE -eq 1 ]]; then
+        echo ">>> Configuring Witty Pi to power on Raspberry Pi when power is connected..."
+    else
+        echo ">>> Configuring Witty Pi to keep power to Raspberry Pi off, when power is connected..."
+
+    set_default_power_state $WITTYPI_DEFAULT_POWER_STATE
+
+
+    out_str=$( echo "$WITTYPI_LOW_VOLTAGE_THRESHOLD*0.1" | bc )
+    echo ">>> Configuring Witty Pi to shut down Raspberry Pi when input voltage drops below $out_str V ..."
+    set_low_voltage_threshold $WITTYPI_LOW_VOLTAGE_THRESHOLD   # threshold voltage * 10
+
+    out_str=$( echo "$WITTYPI_RECOVERY_VOLTAGE_THRESHOLD*0.1" | bc )
+    echo ">>> Configuring Witty Pi to power on Raspberry Pi when input voltage recovers above $out_str V ..."
+    set_recovery_voltage_threshold $WITTYPI_RECOVERY_VOLTAGE_THRESHOLD  # threshold voltage * 10
 }
