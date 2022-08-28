@@ -23,7 +23,7 @@ HOSTNAME=$(hostname)
 WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
 
 WITTYPI_DEFAULT_POWER_STATE = 1      # 1 = TURN ON; 0 = STAY OFF, when power is connected
-WITTYPI_LOW_VOLTAGE_THRESHOLD = 55   # threshold voltage * 10 (as integer)
+WITTYPI_LOW_VOLTAGE_THRESHOLD = 65   # threshold voltage * 10 (as integer)
 WITTYPI_RECOVERY_VOLTAGE_THRESHOLD = 100   # threshold voltage * 10 (as integer)
 
 
