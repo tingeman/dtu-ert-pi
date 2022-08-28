@@ -546,8 +546,8 @@ f_enable_I2C () {
 # Configure witty pi functionality
 # ==============================================================================
 
-
 f_configure_wittypi () {
+    
     source $WITTYPI_DIR/utilities.sh
 
     echo ">>> Modifying wittyPi.conf file..."
@@ -564,7 +564,7 @@ f_configure_wittypi () {
         echo ">>> Configuring Witty Pi to power on Raspberry Pi when power is connected..."
     else
         echo ">>> Configuring Witty Pi to keep power to Raspberry Pi off, when power is connected..."
-
+    fi
     set_default_power_state $WITTYPI_DEFAULT_POWER_STATE
 
 
@@ -575,4 +575,5 @@ f_configure_wittypi () {
     out_str=$( echo "$WITTYPI_RECOVERY_VOLTAGE_THRESHOLD*0.1" | bc )
     echo ">>> Configuring Witty Pi to power on Raspberry Pi when input voltage recovers above $out_str V ..."
     set_recovery_voltage_threshold $WITTYPI_RECOVERY_VOLTAGE_THRESHOLD  # threshold voltage * 10
+    
 }
