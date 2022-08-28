@@ -16,8 +16,12 @@ WITTYPI4:
     i2c_bus: 1
     
 RELAY_BOARD:
-    gpio_reset: 9
-    gpio_set: 11
+    # 2022-08-28: Pins 9 & 11 switched around in config after testing.
+    #             Figure out if "reset=11"/"set=9" is correct, or if the
+    #             naming is wrong. Then change here and in gpio_relay.py
+    #             if necessary.
+    gpio_reset: 11
+    gpio_set: 9
 
 TERRAMETER:
     ip: "192.168.23.10"

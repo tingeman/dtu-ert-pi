@@ -24,8 +24,12 @@ wpi_available = False
 ina_available = False
 
 if ('WITTYPI4' in CONFIG) and (CONFIG['WITTYPI4']['installed']):
-    import wittyPi as wpi
-    wpi_available = True
+    try:
+        # import wittyPi python module, if available
+        import wittyPi as wpi
+        wpi_available = True
+    except:
+        pass
     
 if ('INA219' in CONFIG) and (CONFIG['INA219']['installed']):    
     from io_scripts.ina219 import INA219
