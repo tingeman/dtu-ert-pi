@@ -32,11 +32,12 @@ WITTYPI_RECOVERY_VOLTAGE_THRESHOLD = 100   # threshold voltage * 10 (as integer)
 
 echo '================================================================================'
 echo '|                                                                              |'
-echo '|                   DTU-ERT-Pi update py and sh files                          |'
+echo '|                   DTU-ERT-Pi update Witty Pi scripts                         |'
 echo '|                                                                              |'
 echo '================================================================================'
 # Strongly inspired by WittyPi install script :-)
 
+source $WITTYPI_DIR/utilities.sh
 
 # ==============================================================================
 # Initial checks
@@ -77,10 +78,10 @@ echo '>>> Downloading wittypi code...'
 if [[ -f "$TMP_DIR/wittyPi.zip" ]]; then 
   rm "$TMP_DIR/wittyPi.zip"
 fi
-if [[ $GIT_BRANCH == develop ]]; then
+if [[ $WITTYPI_GIT_BRANCH == develop ]]; then
   wget "$WITTYPI_DOWNLOAD_URL"/develop.zip -O "$TMP_DIR/wittyPi.zip"
   SRC_DIR="$TMP_DIR"/Witty-Pi-4-develop
-elif [[ $GIT_BRANCH == master ]]; then
+elif [[ $WITTYPI_GIT_BRANCH == master ]]; then
   wget "$WITTYPI_DOWNLOAD_URL"/main.zip -O "$TMP_DIR/wittyPi.zip"
   SRC_DIR="$TMP_DIR"/Witty-Pi-4-main
 else
@@ -118,7 +119,7 @@ sleep 2
 
 echo
 if [ $ERR -eq 0 ]; then
-  echo "All Witty Pi .sh scripts updated to latest version from $WITTYPI_DOWNLOAD_URL/$GIT_BRANCH"
+  echo "All Witty Pi .sh scripts updated to latest version from $WITTYPI_DOWNLOAD_URL/$WITTYPI_GIT_BRANCH"
   echo "wittyPi.conf and all *.wpi files were not touched."
   echo '>>> All done :-)'
 else
