@@ -570,7 +570,7 @@ f_configure_wittypi () {
 
     out_str=$( echo "$WITTYPI_LOW_VOLTAGE_THRESHOLD*0.1" | bc )
     echo ">>> Configuring Witty Pi to shut down Raspberry Pi when input voltage drops below $out_str V ..."
-    set_low_voltage_threshold $WITTYPI_LOW_VOLTAGE_THRESHOLD   # threshold voltage * 10
+    set_low_voltage_threshold $WITTYPI_LOW_VOLTAGE_THRESHOLD  # threshold voltage * 10
 
     out_str=$( echo "$WITTYPI_RECOVERY_VOLTAGE_THRESHOLD*0.1" | bc )
     echo ">>> Configuring Witty Pi to power on Raspberry Pi when input voltage recovers above $out_str V ..."
