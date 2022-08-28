@@ -104,7 +104,7 @@ done
 if [[ $input == yes ]]; then
   cp -rf "$SRC_DIR"/install.sh "$BASE_DIR"/install.sh        
   chmod -R +x "$BASE_DIR"/install.sh
-  echo "The main install.sh was not REPLACED."
+  echo "The main install.sh was REPLACED."
 else
   echo "The main install.sh was not updated."
 fi
