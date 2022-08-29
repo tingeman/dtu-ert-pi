@@ -1,4 +1,31 @@
 # ==============================================================================
+# Configure fan temperature control
+# ==============================================================================
+
+f_configure_fan_control() {
+    echo ' '
+    echo ' '
+    echo '>>> Configuring fan temperature control on GPIO 21 ...'
+
+    match=$(grep 'dtoverlay=gpio-fan' /boot/config.txt)
+    match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+    if [[ -z "$match" ]]; then
+        # if line is missing, insert it after the [all] tag
+        echo "dtoverlay=gpio-fan,gpiopin=21,tmp=60000" >> /boot/config.txt
+        echo "Inserted missing line"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, replace it with the correct line
+        sed -i "s/^\s*#\s*\(dtoverlay=gpio-fan.*\)/dtoverlay=gpio-fan,gpiopin=21,tmp=60000/" /boot/config.txt
+        echo "Found commented line, replaced it with new setting:  dtoverlay=gpio-fan"
+    else
+        # if line exists, replace it
+        sed -i "s/^\s*\(dtoverlay=gpio-fan.*\)/dtoverlay=gpio-fan,gpiopin=21,tmp=60000/" /boot/config.txt
+        echo 'Found existing line and replaced it.'
+    fi
+}
+
+
+# ==============================================================================
 # Disabling bluetooth, enabling wifi
 # ==============================================================================
 

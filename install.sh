@@ -153,6 +153,11 @@ fi
 . $INSTALL_SCRIPTS_DIR/install_functions.sh
 
 
+# ==============================================================================
+# Disabling bluetooth, enabling wifi
+# ==============================================================================
+
+f_configure_fan_control
 
 
 # ==============================================================================
@@ -229,8 +234,8 @@ fi
 if [[ -z install_git || $install_git == true ]]; then
     echo
     echo
-    echo ">>> Installing git..."
-    apt-get install -y git || ((ERR++))
+    echo ">>> Installing git, bc etc..."
+    apt-get install -y git bc || ((ERR++))
 else
     echo ">>> Skipping installation of git"
 fi
