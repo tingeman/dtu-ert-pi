@@ -8,7 +8,7 @@
 
 # target directories
 INSTALL_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BASE_DIR="$INSTALL_SCRIPTS_DIR/.."
+BASE_DIR=$(cd "$INSTALL_SCRIPTS_DIR/.." && pwd)
 TMP_DIR="$INSTALL_SCRIPTS_DIR/tmp"
 WITTYPI_DIR="$BASE_DIR/wittypi"
 DTUERTPI_DIR="$BASE_DIR/dtu-ert-pi"
