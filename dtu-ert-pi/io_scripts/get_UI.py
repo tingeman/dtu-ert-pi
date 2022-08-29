@@ -49,7 +49,7 @@ def get_ina_UI():
     ina = INA219(ina_i2c_bus, ina_shunt_resistance)
     ina.configure(ina.RANGE_32V, ina.GAIN_AUTO)
     
-    I = ina.current()*1000
+    I = ina.current()/1000
     U = ina.voltage()
     last_device_used = 'ina'    
     gpio_relay.gpio_off(gpio_ina_vcc)
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     if ina_available:
         Uina, Iina = get_ina_UI()
         print('--- INA219 -----------------------')
-        print('Current draw: {0:.3f} mA'.format(Iina))
+        print('Current draw: {0:.3f} mA'.format(Iina*1000))
         print('Input voltage: {0:.3f} V'.format(Uina))
         print('Power draw: {0:.3f} W'.format(Iina*Uina))
         print('')
