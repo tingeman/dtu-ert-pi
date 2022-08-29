@@ -111,7 +111,7 @@ fi
 
 echo
 
-rsync -avmr --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/dtu-ert-pi "$DTUERTPI_DIR"
+rsync -avm --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/dtu-ert-pi/ "$DTUERTPI_DIR"/
 
 chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
 chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
