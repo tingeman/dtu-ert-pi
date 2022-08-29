@@ -19,7 +19,7 @@ $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "=== INITIATING FORCED REBOOT ========
 sleep 2
 
 clear_alarm_flags
-shutdown -r now
+/usr/sbin/shutdown -r now
 
 
 
