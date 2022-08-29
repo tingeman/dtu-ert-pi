@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # If this script is sourced from the install script, the variable
