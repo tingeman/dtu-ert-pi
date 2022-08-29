@@ -12,7 +12,7 @@ fi
 
 # import settings
 source "$SH_SCRIPTS_DIR"/script_settings
-source "$wittypi_dir"/gpio-util.sh      # order of imports could be important...
+source "$WITTYPI_DIR"/gpio-util.sh      # order of imports could be important...
 source "$WITTYPI_DIR"/utilities.sh
 
 
