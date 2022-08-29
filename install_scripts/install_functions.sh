@@ -556,8 +556,9 @@ f_configure_wittypi () {
     sed -i "{s#^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
     sed -i "{s#^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
 
-    echo ">>> Copying schedule from turn_on_every_hour.wpi file ..."
-    cp -f $WITTYPI_DIR/schedules/turn_on_every_hour.wpi $WITTYPI_DIR/schedule.wpi
+    echo ">>> Copying schedule from turn_on_35min_every_hour_WAIT.wpi file ..."
+    cp -f $INSTALL_SCRIPTS_DIR/template_files/turn_on_35min_every_hour_WAIT.wpi $WITTYPI_DIR/schedules/
+    cp -f $WITTYPI_DIR/schedules/turn_on_35min_every_hour_WAIT.wpi $WITTYPI_DIR/schedule.wpi
 
 
     if [[ $WITTYPI_DEFAULT_POWER_STATE -eq 1 ]]; then
