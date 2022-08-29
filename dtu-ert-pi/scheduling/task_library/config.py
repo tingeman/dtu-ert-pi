@@ -22,7 +22,7 @@ def find_upwards(cwd, filename, return_dir=True):
     
 base_dir = Path(__file__).parent.absolute()    
 
-base_dir = find_upwards(Path.cwd(), "config_module.py")
+base_dir = find_upwards(base_dir, "config_module.py")
 
 if base_dir is None:
     raise FileNotFoundError('Could not identify location of config_module.py.')
