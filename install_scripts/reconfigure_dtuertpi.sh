@@ -19,14 +19,6 @@ DTUERTPI_DIR="$BASE_DIR/dtu-ert-pi"
 USB_MOUNT_POINT=/media/usb
 HOSTNAME=$(hostname)
 
-# Two crontab template files are available. The first for production use.
-# The second for stress testing the booting and shutdown of the Raspberry Pi.
-#CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template.txt
-CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdown.txt
-
-# [GIT BRANCH] --------------------------------------------
-GIT_BRANCH=develop      # master or develop
-
 # [UPLOAD SERVER] -----------------------------------------
 SERVER_IP="192.38.64.71"
 PORT="22"
@@ -36,17 +28,6 @@ SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
 FWD_PORT="2221"
 
-# [WITTYPI] -----------------------------------------------
-WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
-WITTYPI_INSTALL_SCRIPT_URL="https://github.com/tingeman/Witty-Pi-4/raw/develop/Software/install.sh"
-WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip"
-# WITTYPI_DOWNLOAD_URL="https://www.uugear.com/repo/WittyPi4/LATEST"    # Uncomment to install UUGEAR latest version instead
-INSTALL_UWI=false     # Set following line to 'true' to install UUGEAR Web Interface
-UWI_DOWNLOAD_URL="https://www.uugear.com/repo/UWI/installUWI.sh"
-
-WITTYPI_DEFAULT_POWER_STATE=1      # 1 = TURN ON; 0 = STAY OFF, when power is connected
-WITTYPI_LOW_VOLTAGE_THRESHOLD=55   # threshold voltage * 10 (as integer)
-WITTYPI_RECOVERY_VOLTAGE_THRESHOLD=100   # threshold voltage * 10 (as integer)
 
 
 echo '================================================================================'
