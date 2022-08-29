@@ -29,7 +29,7 @@ WITTYPI_RECOVERY_VOLTAGE_THRESHOLD=100   # threshold voltage * 10 (as integer)
 
 echo '================================================================================'
 echo '|                                                                              |'
-echo '|                   DTU-ERT-Pi reinstall autossh                               |'
+echo '|                   DTU-ERT-Pi reconfigure witty pi                            |'
 echo '|                                                                              |'
 echo '================================================================================'
 # Strongly inspired by WittyPi install script :-)
