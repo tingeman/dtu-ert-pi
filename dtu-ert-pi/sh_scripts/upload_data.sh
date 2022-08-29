@@ -55,7 +55,7 @@ start_upload()
     if [ -d $UPLSOURCEDIR ]
     then
         $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Start upload" >> $LOGDIR/uploadlog
-        $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOGDIR/uploadlog
+        $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" --mkpath $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOGDIR/uploadlog
         # --chmod "Da=rw,Fa=rw":    set destination permissions so all users can read/write/delete the files
 
         if [ $? -eq 0 ]

@@ -13,5 +13,5 @@ fi
 # import settings
 source "$SH_SCRIPTS_DIR"/script_settings
 
-$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $PRIVATEKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" $LOG_DIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/logs/
+$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $LOG_DIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/logs/
 
