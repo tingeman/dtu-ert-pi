@@ -12,10 +12,10 @@ fi
 
 # import settings
 source "$SH_SCRIPTS_DIR"/script_settings
-source "$WITTYPI_DIR"/wittyPi.conf
+source "$WITTYPI_DIR"/utilities.sh
 
-touch $LOGDIR/logfile
-$BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "=== INITIATING FORCED REBOOT ==========================" >> $LOGDIR/logfile 
+touch $LOG_DIR/logfile
+$BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "=== INITIATING FORCED REBOOT ==========================" >> $LOG_DIR/logfile 
 sleep 2
 
 clear_alarm_flags

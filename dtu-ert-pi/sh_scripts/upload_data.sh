@@ -37,16 +37,16 @@ test_connectivity()
 {
     ssh_ok=0
     
-    $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Trying $SSH" >> $LOGDIR/uploadlog   
-    HOST=`$SSH hostname 2>> $LOGDIR/uploadlog`
+    $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Trying $SSH" >> $LOG_DIR/uploadlog   
+    HOST=`$SSH hostname 2>> $LOG_DIR/uploadlog`
     
     if [ $? -eq 0 ]
     then
         ssh_ok=1
-        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Connected OK to $HOST" >> $LOGDIR/uploadlog   
+        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Connected OK to $HOST" >> $LOG_DIR/uploadlog   
     else
         ssh_ok=0
-        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Failed to connect" >> $LOGDIR/uploadlog   
+        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Failed to connect" >> $LOG_DIR/uploadlog   
     fi
 }
 
@@ -54,27 +54,27 @@ start_upload()
 {
     if [ -d $UPLSOURCEDIR ]
     then
-        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Start upload" >> $LOGDIR/uploadlog
-        $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" --mkpath $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOGDIR/uploadlog
+        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Start upload" >> $LOG_DIR/uploadlog
+        $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" --mkpath $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOG_DIR/uploadlog
         # --chmod "Da=rw,Fa=rw":    set destination permissions so all users can read/write/delete the files
 
         if [ $? -eq 0 ]
         then
              upl_ok=1
-             $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Upload done" >> $LOGDIR/uploadlog
+             $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Upload done" >> $LOG_DIR/uploadlog
         else
             upl_ok=0
-            $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"`  "UPL: Upload failed." >> $LOGDIR/uploadlog   
+            $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"`  "UPL: Upload failed." >> $LOG_DIR/uploadlog   
         fi
     else
-        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: No upload source available" >> $LOGDIR/uploadlog
+        $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: No upload source available" >> $LOG_DIR/uploadlog
     fi
 }
 
 
 # This is the main program
 
-$BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Starting upload to BYG" >> $LOGDIR/uploadlog
+$BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Starting upload to BYG" >> $LOG_DIR/uploadlog
 
 test_connectivity
 
@@ -82,6 +82,6 @@ if [ $ssh_ok -eq 1 ]
 then
     start_upload
 else
-    $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Could not connect" >> $LOGDIR/uploadlog   
+    $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "UPL: Could not connect" >> $LOG_DIR/uploadlog   
 fi
 

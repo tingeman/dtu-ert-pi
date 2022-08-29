@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 f_enable_wifi () {

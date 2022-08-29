@@ -14,12 +14,12 @@ fi
 source "$SH_SCRIPTS_DIR"/script_settings
 
 echo "Uploading /root/ files..."
-$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath /root/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/home_root/ 2>> $LOGDIR/uploadlog
+$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath /root/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/home_root/ 2>> $LOG_DIR/uploadlog
 echo "Uploading logs..."
-$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $LOGDIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/logs/ 2>> $LOGDIR/uploadlog
+$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $LOG_DIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/logs/ 2>> $LOG_DIR/uploadlog
 echo "Uploading crontab backups..."
-$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $CRONTABDIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/crontabs/ 2>> $LOGDIR/uploadlog
+$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $CRONTABDIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/crontabs/ 2>> $LOG_DIR/uploadlog
 echo "Uploading crontab backups..."
-$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" --mkpath $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOGDIR/uploadlog
+$USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" --mkpath $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOG_DIR/uploadlog
 
 echo "Done!"
