@@ -32,17 +32,5 @@ else:
         sys.path.insert(0, str(base_dir))
         print('Inserted in sys.path...')
      
-## OLD APPROACH, requires knowledge of where in the folder structure we are
-## in order to specify the correct .parent.parent. ...
-
-#base_dir = str(Path(__file__).parent.parent.absolute())
-#if base_dir not in sys.path:
-#    sys.path.insert(0, base_dir)
-#
-#io_scripts_dir = str(Path(__file__).parent.absolute())
-#if io_scripts_dir not in sys.path:
-#    sys.path.insert(0, io_scripts_dir)
-
 # Now import the CONFIG dictionary
 from config_module import CONFIG
-print('I am in {0}'.format(__file__))
