@@ -19,7 +19,7 @@ echo "Uploading logs..."
 $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $LOG_DIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/logs/ 2>> $LOG_DIR/uploadlog
 echo "Uploading crontab backups..."
 $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --exclude "/.*" --chmod "Da=rw,Fa=rw" --mkpath $CRONTABDIR/ $SSHUSER@$SERVER_IP:$UPLDESTDIR/crontabs/ 2>> $LOG_DIR/uploadlog
-echo "Uploading crontab backups..."
+echo "Uploading data (excluding raw data)..."
 $USRBIN/rsync -rtlDz --timeout=300 -e "ssh -i $SSHKEY" --chmod "Da=rw,Fa=rw" --exclude "RawData" --mkpath $UPLSOURCEDIR $SSHUSER@$SERVER_IP:$UPLDESTDIR 2>> $LOG_DIR/uploadlog
 
 echo "Done!"

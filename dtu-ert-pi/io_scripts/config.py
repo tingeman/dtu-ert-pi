@@ -27,10 +27,10 @@ base_dir = find_upwards(Path.cwd(), "config_module.py")
 if base_dir is None:
     raise FileNotFoundError('Could not identify location of config_module.py.')
 else:
-    print('Base directory identified: {0}'.format(base_dir))
+    #print('Base directory identified: {0}'.format(base_dir))
     if str(base_dir) not in sys.path:
         sys.path.insert(0, str(base_dir))
-        print('Inserted in sys.path...')
+        #print('Inserted in sys.path...')
      
 # Now import the CONFIG dictionary
 from config_module import CONFIG
