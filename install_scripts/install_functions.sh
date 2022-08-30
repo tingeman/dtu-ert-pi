@@ -226,7 +226,7 @@ f_configure_dhcp_server () {
     echo ">>> Installing dhcp server..."
     apt-get install -y isc-dhcp-server
 
-   echo
+    echo
     echo
     echo '>>> configuring dhcp server settings ...'
     # search on lines that are not commented
