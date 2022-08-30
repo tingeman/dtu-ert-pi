@@ -55,8 +55,8 @@ if [[ -f '/etc/default/isc-dhcp-server' ]]; then
   rm '/etc/default/isc-dhcp-server'
 fi
 
-if [[ -f '/etc/dhcp/dhcpd.conf' ]]; then
-  rm '/etc/dhcp/dhcpd.conf'
+if [[ -d '/etc/dhcp' ]]; then
+  rm -r '/etc/dhcp'
 fi
 
 if [[ -f '/etc/systemd/system/isc-dhcp-server.service' ]]; then
