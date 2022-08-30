@@ -229,6 +229,9 @@ f_configure_dhcp_server () {
     echo
     echo
     echo '>>> configuring dhcp server settings ...'
+
+    dpkg-reconfigure isc-dhcp-server
+
     # search on lines that are not commented
     match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/default/isc-dhcp-server | grep 'INTERFACESv4.*')
     # remove any leading spaces
