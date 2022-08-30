@@ -54,7 +54,6 @@ elif [[ "$OFS_enabled" == 'true' && "$OFS_img_exists" == 'true' ]]; then
 fi
 
 if [[ "$OFS_enabled" == 'true' && "$OFS_img_exists" == 'true' ]]; then
-    printf "Overlay file system image exists and is enabled in /boot/config.txt\n"
     printf "NB: overlay file system WILL BE MOUNTED on next reboot!\n"
     printf "\n"
 elif [[ "$OFS_enabled" == 'true' && "$OFS_img_exists" == 'false' ]]; then
@@ -67,8 +66,7 @@ if [[ "$OFS_enabled" == 'true' && "$OFS_img_exists" == 'true' || "$OFS_inuse" ==
     printf "CHANGES MADE NOW WILL NOT SURVIVE REBOOT!\n"
     printf "\n"
 else
-    printf "Overlay file system is not in use.\n"
-    printf "Any changes made will be persistent...\n"
+    printf "Overlay file system is not in use. Changes made will be persistent...\n"
     printf "\n"
 fi
 
