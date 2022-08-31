@@ -408,7 +408,7 @@ f_configure_modem_connection () {
     echo
     echo
     echo ">>> Installing packages related to modem operation..."
-    apt-get install -y libpcap0.8 libuniconf4.6 libwvstreams4.6-base libwvstreams4.6-extras ppp wvdial minicom usb-modeswitch || ((ERR++))
+    apt-get install -y libpcap0.8 libuniconf4.6 libwvstreams4.6-base libwvstreams4.6-extras ppp wvdial minicom usb-modeswitch lsof || ((ERR++))
 
     cp "$INSTALL_SCRIPTS_DIR"/template_files/wvdial.conf /etc/wvdial.conf
     echo "Check if settings are correct in /etc/wvdial.conf"

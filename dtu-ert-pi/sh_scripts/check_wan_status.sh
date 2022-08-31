@@ -35,7 +35,11 @@ if [ $? -ne 0 ]; then
     if [[ -e $MODEMTTYDEV ]]; then
         echo "$MODEMTTYDEV exists!"
         
-        PIDs=`lsof -t $MODEMTTYDEV`
+        if [[ -z $(which lsof) ]]; then
+            apt-get install -y lsof
+        fi
+
+        PIDs=`/usr/bin/lsof -t $MODEMTTYDEV`
         if [[ "" !=  "$PIDs" ]]; then
             echo "killing $PIDs"
             kill $PIDs
@@ -49,4 +53,6 @@ if [ $? -ne 0 ]; then
 
     /sbin/ifup --force ppp0
     sleep 10
+else
+    echo "PPP0 connection is up!"
 fi
