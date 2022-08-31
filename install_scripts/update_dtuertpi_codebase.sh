@@ -112,7 +112,7 @@ fi
 echo
 
 rsync -avm --include='*.py' --include='*.sh' -f 'hide,! */' "$SRC_DIR"/dtu-ert-pi/ "$DTUERTPI_DIR"/
-cp -rf "$SRC_DIR"/dtu-ert-pi/sh_scripts/template_files "$DTUERTPI_DIR"/sh_scripts/template_files
+cp -rf "$SRC_DIR"/dtu-ert-pi/sh_scripts/template_files "$DTUERTPI_DIR"/sh_scripts/template_files/
 
 chown -R $USER:$(id -g -n $USER) "$DTUERTPI_DIR" || ((ERR++))
 chown -R $USER:$(id -g -n $USER) "$INSTALL_SCRIPTS_DIR" || ((ERR++))
