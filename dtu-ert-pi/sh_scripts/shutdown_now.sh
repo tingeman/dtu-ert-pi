@@ -15,10 +15,11 @@ source "$SH_SCRIPTS_DIR"/script_settings
 source "$WITTYPI_DIR"/gpio-util.sh      # order of imports could be important...
 source "$WITTYPI_DIR"/utilities.sh
 
-
 touch $LOG_DIR/logfile
 $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "=== INITIATING FORCED SHUTDOWN ========================" >> $LOG_DIR/logfile 
 sleep 2
+
+"$SH_SCRIPTS_DIR"/toggle_gpio.sh OFF
 
 do_shutdown $HALT_PIN
 

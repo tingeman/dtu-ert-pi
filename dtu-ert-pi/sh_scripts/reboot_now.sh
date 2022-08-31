@@ -19,6 +19,9 @@ $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "=== INITIATING FORCED REBOOT ========
 sleep 2
 
 clear_alarm_flags
+
+"$SH_SCRIPTS_DIR"/toggle_gpio.sh OFF
+
 /usr/sbin/shutdown -r now
 
 
