@@ -19,7 +19,7 @@ touch $LOG_DIR/logfile
 $BIN/echo `date "+%Y-%m-%d %H:%M:%S(%z)"` "=== INITIATING FORCED SHUTDOWN ========================" >> $LOG_DIR/logfile 
 sleep 2
 
-"$SH_SCRIPTS_DIR"/toggle_gpio.sh OFF
+"$SH_SCRIPTS_DIR"/toggle_relay.sh OFF
 
 do_shutdown $HALT_PIN
 

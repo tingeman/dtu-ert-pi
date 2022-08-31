@@ -20,7 +20,7 @@ sleep 2
 
 clear_alarm_flags
 
-"$SH_SCRIPTS_DIR"/toggle_gpio.sh OFF
+"$SH_SCRIPTS_DIR"/toggle_relay.sh OFF
 
 /usr/sbin/shutdown -r now
 
