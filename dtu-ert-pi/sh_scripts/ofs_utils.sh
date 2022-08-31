@@ -70,5 +70,3 @@ get_bootro_now() {
   findmnt /boot | grep -q " ro,"
   echo $?
 }
-
-}

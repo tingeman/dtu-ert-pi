@@ -64,7 +64,6 @@ off_duration = 30         # sec
 timeout = 300             # sec
 
 
-
 # instantiate voltage sensor
 ina_available = CONFIG['INA219']['installed']
 
