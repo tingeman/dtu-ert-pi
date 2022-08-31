@@ -11,9 +11,10 @@ else
 fi
 
 if [[ -z $CRONTAB_TEMPLATE ]]; then
-  # Two crontab template files are available. The first for production use.
-  # The second for stress testing the booting and shutdown of the Raspberry Pi.
-  CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template.txt
+  # Different crontab template files are available.
+  # Add more custom templates in dtu-ert-pi/sh_scripts/template_files
+  #CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template.txt
+  CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template_testing.txt
   #CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template_shutdown.txt
 fi
 
