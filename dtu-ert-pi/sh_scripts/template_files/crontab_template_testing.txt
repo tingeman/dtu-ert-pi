@@ -25,8 +25,8 @@
 # log the battery supply voltage
 */5  *  *  *  *    /usr/bin/python3 /root/dtu-ert-pi/io_scripts/log_voltage.py
 
-# # reboot daily at 04:00 UTC time
- 00 04  *  *  *    /usr/bin/bash /root/dtu-ert-pi/sh_scripts/reboot_now.sh   2>>/media/usb/logs/cron_errors
+# reboot daily at 04:00 UTC time and every sixth hour thereafter (4h, 10h, 16h, 22h)
+ 00 4/6  *  *  *    /usr/bin/bash /root/dtu-ert-pi/sh_scripts/reboot_now.sh   2>>/media/usb/logs/cron_errors
 
 # Check in with alive server
 @reboot            sleep 240 && /usr/bin/python3 /root/dtu-ert-pi/send_alive.py "rebooted"
@@ -34,4 +34,8 @@
 
 # upload logs
 */15 *  *  *  *    /usr/bin/python3 /root/dtu-ert-pi/sh_scripts/upload_logs.sh   2>>/media/usb/logs/cron_errors
+
+# Check that ppp0 is up, or try to reset if it is not
+20 */4  *  *  *    /usr/bin/bash /root/dtu-ert-pi/sh_scripts/check_wan_status.sh   2>>/media/usb/logs/cron_errors
+
 # --- END AUTO CONFIGURE SECTION ----------------------------------------------
