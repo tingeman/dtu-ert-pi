@@ -43,6 +43,6 @@ systemctl enable --now forced_reboot.timer
 # don't enable the forced_reboot.service. That would result in the reboot running immediately at boot (infinite loop)
 
 # reconfigure crontab
-$SH_SCRIPTS_DIR/auto_configure_crontab.sh crontab_template_noreboot.txt
+$SH_SCRIPTS_DIR/auto_configure_crontab.sh crontab_template_no4amreboot.txt
 
 echo "done"

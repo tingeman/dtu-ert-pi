@@ -16,10 +16,14 @@
 # │  │  │  │  │
 # *  *  *  *  *   <command to execute>
 
-# ==== DONT EVER CHANGE THIS ====
-# 00  04  *  *  *    /usr/bin/bash /root/dtu-ert-pi/sh_scripts/reboot_now.sh
-# Safety precaution, always reboot at 04:00 UTC, no matter what else happens
-# Currently turned off for testing
+# ==== SAFETY PRECAUTION ====
+# A fixed 04:00 UTC reboot is scheduled through a systemd timer (forced_reboot.timer)
+
+00  10  *  *  *    /usr/bin/bash /root/dtu-ert-pi/sh_scripts/reboot_now.sh
+# Safety precaution while testing
+# Installing the systemd timer in OFS mode, the RPi should reboot at 04:00 and then
+# fall back to rebooting every 4 hours, e.g. at 08:00 UTC
+# This schedules a reboot at 10:00 UTC in case something goes wrong.
 
 
 # Reschedule next boot every 15 min
@@ -32,7 +36,6 @@
 
 # reboot daily at 04:00 UTC time and every sixth hour thereafter (4h, 8h, 12h, 16h, 20h, 24h)
 # 00 */4  *  *  *    /usr/bin/bash /root/dtu-ert-pi/sh_scripts/reboot_now.sh   2>>/media/usb/logs/cron_errors
-# Currently turned off for testing
 
 # Check in with alive server
 @reboot            sleep 240 && /usr/bin/python3 /root/dtu-ert-pi/send_alive.py "rebooted"
