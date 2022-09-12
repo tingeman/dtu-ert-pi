@@ -451,6 +451,23 @@ echo
 
 source $DTUERTPI_DIR/sh_scripts/auto_configure_crontab.sh
 
+# ==============================================================================
+# Set forced reboot timer
+# ==============================================================================
+
+echo " "
+echo ">>> Installing forced_reboot timer to reboot at 04:00 UTC every day"
+
+echo "Copying systemd files from templates..."
+cp -f $INSTALL_SCRIPTS_DIR/templates/forced_reboot.* /etc/systemd/system/
+
+echo "Reloading daemons..."
+systemctl daemon-reload
+
+echo "Enabling timer..."
+systemctl enable --now forced_reboot.timer
+
+echo " "
 
 # ==============================================================================
 # Clean up
