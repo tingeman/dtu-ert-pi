@@ -1,11 +1,38 @@
 # ==============================================================================
+# Configure fan temperature control
+# ==============================================================================
+
+f_configure_fan_control() {
+    echo ' '
+    echo ' '
+    echo '>>> Configuring fan temperature control on GPIO 21 ...'
+
+    match=$(grep 'dtoverlay=gpio-fan' /boot/config.txt)
+    match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+    if [[ -z "$match" ]]; then
+        # if line is missing, insert it after the [all] tag
+        echo "dtoverlay=gpio-fan,gpiopin=21,tmp=60000" >> /boot/config.txt
+        echo "Inserted missing line"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, replace it with the correct line
+        sed -i "s/^\s*#\s*\(dtoverlay=gpio-fan.*\)/dtoverlay=gpio-fan,gpiopin=21,tmp=60000/" /boot/config.txt
+        echo "Found commented line, replaced it with new setting:  dtoverlay=gpio-fan"
+    else
+        # if line exists, replace it
+        sed -i "s/^\s*\(dtoverlay=gpio-fan.*\)/dtoverlay=gpio-fan,gpiopin=21,tmp=60000/" /boot/config.txt
+        echo 'Found existing line and replaced it.'
+    fi
+}
+
+
+# ==============================================================================
 # Disabling bluetooth, enabling wifi
 # ==============================================================================
 
 f_enable_bluetooth () {
     echo
     echo
-    if [[ -z $1  ||  $1 -eq false ]]; then
+    if [[ -z $1  ||  $1 == false ]]; then
         echo '>>> Disabling bluetooth in /boot/config.txt'
         match=$(grep 'dtoverlay=disable-bt' /boot/config.txt)
         match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
@@ -32,12 +59,12 @@ f_enable_bluetooth () {
 f_enable_wifi () {
     echo
     echo
-    if [[ -z $1  ||  $1 -eq true ]]; then
+    if [[ -z $1  ||  $1 == true ]]; then
         echo '>>> Enabling wifi in /boot/config.txt'
         match=$(grep 'dtoverlay=disable-wifi' /boot/config.txt)
         match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
         if [[ -z "$match" || "$match" == "#"* ]]; then
-            echo 'It seems wifi is already disabled.'
+            echo 'It seems wifi is already enabled.'
         else
             # if disable command is present, comment it
             sed "s/^[[:space:]](dtoverlay=disable-wifi.*)/# \1/"
@@ -61,6 +88,12 @@ f_enable_wifi () {
 # ==============================================================================
 
 f_check_python_version() {
+
+    # Get bc for bash calculations, if not installed
+    if [[ -z $(which bc) ]]; then
+        apt-get install bc
+    fi
+
     # check if python is installed
     # from https://stackoverflow.com/a/33183884/1760389
 
@@ -69,7 +102,7 @@ f_check_python_version() {
     if [[ -z "$python_version" ]]; then
         echo "Python is not installed!" 
         echo "Please install python version 3.9 or higher and rerun this script."
-        exit 1
+        ((ERR++))
     fi
 
     # Set space as the delimiter
@@ -196,6 +229,9 @@ f_configure_dhcp_server () {
     echo
     echo
     echo '>>> configuring dhcp server settings ...'
+
+    dpkg-reconfigure isc-dhcp-server
+
     # search on lines that are not commented
     match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/default/isc-dhcp-server | grep 'INTERFACESv4.*')
     # remove any leading spaces
@@ -210,7 +246,7 @@ f_configure_dhcp_server () {
         echo "INTERFACESv4=\"eth0\"" >> /etc/default/isc-dhcp-server
     else
         echo "It seems dhcp server interface is already configured for eth0."
-    fi
+    fi 
 
 
     match=$(grep 'authoritative' /etc/dhcp/dhcpd.conf)
@@ -372,19 +408,19 @@ f_configure_modem_connection () {
     echo
     echo
     echo ">>> Installing packages related to modem operation..."
-    apt-get install -y libpcap0.8 libuniconf4.6 libwvstreams4.6-base libwvstreams4.6-extras ppp wvdial minicom usb-modeswitch || ((ERR++))
+    apt-get install -y libpcap0.8 libuniconf4.6 libwvstreams4.6-base libwvstreams4.6-extras ppp wvdial minicom usb-modeswitch lsof || ((ERR++))
 
-    cp "$INSTALL_SCRIPTS_DIR/wvdial.conf" /etc/wvdial.conf
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/wvdial.conf /etc/wvdial.conf
     echo "Check if settings are correct in /etc/wvdial.conf"
 
-    cp "$INSTALL_SCRIPTS_DIR/ppp.conf" /etc/modules-load.d/ppp.conf
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/ppp.conf /etc/modules-load.d/ppp.conf
     echo "Created /etc/modules-load.d/ppp.conf"
 
-    cp "$INSTALL_SCRIPTS_DIR/wait-dialup-hardware" /etc/ppp/wait-dialup-hardware
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/wait-dialup-hardware /etc/ppp/wait-dialup-hardware
     chmod 0755 /etc/ppp/wait-dialup-hardware
     echo "Created /etc/ppp/wait-dialup-hardware"
 
-    cp "$INSTALL_SCRIPTS_DIR/wvdial" /etc/ppp/peers/wvdial
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/wvdial /etc/ppp/peers/wvdial
     echo "Created /etc/ppp/peers/wvdial"
 
     match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/network/interfaces | grep '^iface ppp0')
@@ -426,32 +462,45 @@ f_configure_autossh () {
     echo
     echo
     echo '>>> Generating ssh public-private key relationship...'
-    mkdir /root/.ssh
+    if [[ ! -d /root/.ssh ]]; then
+        mkdir /root/.ssh
+    fi
 
-    if [ -f $SSHKEY ]; then
-       echo "It seems ssh key already exists... skipping this step."
+    if [[ -f $SSHKEY ]]; then
+       echo "It seems ssh key already exists ($SSHKEY)... skipping this step."
     else
-        ssh-keygen -b 2048 -t rsa -f $SSH_KEY -q -N ""
-        echo "Created ssh key."
+        ssh-keygen -b 2048 -t rsa -f $SSHKEY -q -N ""
+        echo "Created ssh key: $SSHKEY"
     fi
 
     # copy template script
-    cp "$INSTALL_SCRIPTS_DIR/autossh-byg-cdata1-tunnel.service" /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    cp "$INSTALL_SCRIPTS_DIR"/template_files/autossh-byg-cdata1-tunnel.service /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     # do replacements according to settings
-    sed -i '/ExecStart=\/usr\/bin\/autossh/s/PORT/'"$PORT"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
-    sed -i '/ExecStart=\/usr\/bin\/autossh/s/USER/'"$USER"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    sed -i '/ExecStart=\/usr\/bin\/autossh/s/PORT/'"$FWD_PORT"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    sed -i '/ExecStart=\/usr\/bin\/autossh/s/USER/'"$SSHUSER"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
     sed -i '/ExecStart=\/usr\/bin\/autossh/s/SERVER_IP/'"$SERVER_IP"'/' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     # see this https://stackoverflow.com/a/27787551/1760389 for explanation of using ~ below
-    sed -i '/ExecStart=\/usr\/bin\/autossh/s~SSH_KEY~'"$SSH_KEY"'~' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
+    sed -i '/ExecStart=\/usr\/bin\/autossh/s~SSHKEY~'"$SSHKEY"'~' /etc/systemd/system/autossh-byg-cdata1-tunnel.service
 
     echo "Created /etc/systemd/system/autossh-byg-cdata1-tunnel.service"
 
-    systemctl daemon-reload
-    systemctl start autossh-byg-cdata1-tunnel.service
-    systemctl enable autossh-byg-cdata1-tunnel.service
-    echo "Started the autossh-byg-cdata1-tunnel.service"
+    if systemctl is-active --quiet autossh-byg-cdata1-tunnel.service; then
+        echo ">>> Changes made to the autossh-byg-cdata1-tunnel.service."
+        echo ">>> They will take effect at next reboot."
+        echo
+        echo "or try:" 
+        echo "    systemctl stop autossh-byg-cdata1-tunnel.service"
+        echo "    systemctl daemon-reload"
+        echo "    systemctl start autossh-byg-cdata1-tunnel.service"
+    else
+        systemctl daemon-reload
+        systemctl start autossh-byg-cdata1-tunnel.service
+        systemctl enable autossh-byg-cdata1-tunnel.service
+        echo "Started the autossh-byg-cdata1-tunnel.service"
+    fi
+
     echo " "
     echo "NB: You must manually set up the server to accept the ssh connection!"
 }
@@ -486,19 +535,76 @@ f_enable_I2C () {
         echo 'i2c-dev' >> /etc/modules
     fi
 
+    # Section does exist, do conditional insert
     i2c1=$(grep 'dtparam=i2c1=on' /boot/config.txt)
     i2c1=$(echo -e "$i2c1" | sed -e 's/^[[:space:]]*//')
-    if [[ -z "$i2c1" || "$i2c1" == "#"* ]]; then
+    if [[ -z "$i2c1" ]]; then
+        # if line is missing, insert it at end of file
         echo 'dtparam=i2c1=on' >> /boot/config.txt
+        echo "Inserted missing line:   dtparam=i2c1=on"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, uncomment it
+        sed -i "s/^\s*#\s*\(dtparam=i2c1=on.*\)/\1/" /boot/config.txt
+        echo "Found commented line and uncommented:  dtparam=i2c1=on"
     else
+        # if line exists, do nothing
         echo 'Seems i2c1 parameter already set, skip this step.'
     fi
 
+    # Section does exist, do conditional insert
     i2c_arm=$(grep 'dtparam=i2c_arm=on' /boot/config.txt)
     i2c_arm=$(echo -e "$i2c_arm" | sed -e 's/^[[:space:]]*//')
-    if [[ -z "$i2c_arm" || "$i2c_arm" == "#"* ]]; then
+    if [[ -z "$i2c_arm" ]]; then
+        # if line is missing, insert it at end of file
         echo 'dtparam=i2c_arm=on' >> /boot/config.txt
+        echo "Inserted missing line:   dtparam=i2c_arm=on"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, uncomment it
+        sed -i "s/^\s*#\s*\(dtparam=i2c_arm=on.*\)/\1/" /boot/config.txt
+        echo "Found commented line and uncommented:  dtparam=i2c_arm=on"
     else
-       echo 'Seems i2c_arm parameter already set, skip this step.'
+        # if line exists, do nothing
+        echo "Line already exists (do nothing):  dtparam=i2c_arm=on"
     fi
+
+
+}
+
+
+
+# ==============================================================================
+# Configure witty pi functionality
+# ==============================================================================
+
+f_configure_wittypi () {
+    
+    source $WITTYPI_DIR/utilities.sh
+
+    echo ">>> Modifying wittyPi.conf file..."
+    # Modify settings in wittyPi.conf
+    sed -i "{s#^[[:space:]]*wittypi_home=.*#wittypi_home=\"$WITTYPI_DIR\"#}" $WITTYPI_DIR/wittyPi.conf
+    sed -i "{s#^[[:space:]]*WITTYPI_LOG_FILE=.*#WITTYPI_LOG_FILE=\"$USB_MOUNT_POINT/logs/wittyPi.log\"#}" $WITTYPI_DIR/wittyPi.conf
+    sed -i "{s#^[[:space:]]*SCHEDULE_LOG_FILE.*#SCHEDULE_LOG_FILE=\"$USB_MOUNT_POINT/logs/schedule.log\"#}" $WITTYPI_DIR/wittyPi.conf
+
+    echo ">>> Copying schedule from turn_on_35min_every_hour_WAIT.wpi file ..."
+    cp -f $INSTALL_SCRIPTS_DIR/template_files/turn_on_35min_every_hour_WAIT.wpi $WITTYPI_DIR/schedules/
+    cp -f $WITTYPI_DIR/schedules/turn_on_35min_every_hour_WAIT.wpi $WITTYPI_DIR/schedule.wpi
+
+
+    if [[ $WITTYPI_DEFAULT_POWER_STATE -eq 1 ]]; then
+        echo ">>> Configuring Witty Pi to power on Raspberry Pi when power is connected..."
+    else
+        echo ">>> Configuring Witty Pi to keep power to Raspberry Pi off, when power is connected..."
+    fi
+    set_default_power_state $WITTYPI_DEFAULT_POWER_STATE
+
+
+    out_str=$( echo "$WITTYPI_LOW_VOLTAGE_THRESHOLD*0.1" | bc )
+    echo ">>> Configuring Witty Pi to shut down Raspberry Pi when input voltage drops below $out_str V ..."
+    set_low_voltage_threshold $WITTYPI_LOW_VOLTAGE_THRESHOLD  # threshold voltage * 10
+
+    out_str=$( echo "$WITTYPI_RECOVERY_VOLTAGE_THRESHOLD*0.1" | bc )
+    echo ">>> Configuring Witty Pi to power on Raspberry Pi when input voltage recovers above $out_str V ..."
+    set_recovery_voltage_threshold $WITTYPI_RECOVERY_VOLTAGE_THRESHOLD  # threshold voltage * 10
+    
 }

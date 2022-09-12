@@ -1,0 +1,32 @@
+# --- BEGIN AUTO CONFIGURE SECTION ----------------------------------------------
+
+# Anything within the AUTO CONFIGURE SECRION will be replaced if
+# the dtu-ert-pi crontab autoconfigure script is rerun.
+# If you want to retain manually defined cron schedules when
+# reconfiguring, place them outside this section.
+
+# ┌───────────── minute (0 - 59)
+# │  ┌───────────── hour (0 - 23)
+# │  │  ┌───────────── day of the month (1 - 31)
+# │  │  │  ┌───────────── month (1 - 12)
+# │  │  │  │  ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+# │  │  │  │  │                                   7 is also Sunday on some systems)
+# │  │  │  │  │
+# │  │  │  │  │
+# *  *  *  *  *   <command to execute>
+
+# Reschedule next boot every 15 min
+# Workaround for overdue startup time causing an i2c bus lockup
+*/15 *  *  *  *    /usr/bin/bash WITTYPI_DIR/runScript.sh 1 revise >> SCHEDULE_LOG_FILE
+45  */2 *  *  *    /usr/sbin/shutdown -h 
+
+# log the battery supply voltage
+*/5  *  *  *  *    /usr/bin/python3 DTUERTPI_DIR/io_scripts/log_voltage.py
+
+# # reboot daily at 04:00 UTC time
+ 00 04  *  *  *    /usr/bin/bash DTUERTPI_DIR/sh_scripts/reboot_now.sh
+
+# Check in with alive server
+@reboot            sleep 240 && /usr/bin/python3 DTUERTPI_DIR/send_alive.py "rebooted"
+
+# --- END AUTO CONFIGURE SECTION ----------------------------------------------

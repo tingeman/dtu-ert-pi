@@ -48,10 +48,7 @@ last_run_file = Path(CONFIG['scheduling']['LAST_RUN_FILE'])
 schedule_file.touch()
 last_run_file.touch()
 
-
 def get_past_tasks():
-    with open(last_run_file) as f:
-        lines = f.readlines()
     try:
         df_past_tasks = pd.read_csv(last_run_file, parse_dates=[1])
     except:

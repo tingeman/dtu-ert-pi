@@ -1,0 +1,14 @@
+# Try to turn on your Raspberry Pi every hour sharp.
+# This script doesn't schedule the shutdown, which is supposed to be done externally.
+# You can shutdown your Raspberry Pi with your program just after finishing the job.
+#
+# On state is set to last 35 min. If rescheduling is performed during this time,
+# (e.g. at 12:30) the next startup will occur on the next hour (e.g. at 13:00).
+# If the Raspberry pi is not shut down during the on-time, and rescheduling is
+# performed during the off-time (e.g. at 12:45) the next startup time will occur
+# an hour later (e.g. at 14:00)
+
+BEGIN	2022-06-05 00:00:00
+END	2035-07-31 23:59:59
+ON	M35	WAIT	# stay at ON state and wait for external shutdown
+OFF	M25		# keep OFF state until next hour comes
