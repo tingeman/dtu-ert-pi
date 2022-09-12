@@ -436,9 +436,10 @@ f_configure_modem_connection () {
 #   wait 30 more seconds for the cellular connection to become active
 auto ppp0
 iface ppp0 inet wvdial
-pre-up /etc/ppp/wait-dialup-hardware ttyUSB2 30
-pre-up sleep 30
-post-up echo "Cellular (ppp0) is online"
+  pre-up /etc/ppp/wait-dialup-hardware ttyUSB2 30
+  pre-up sleep 30
+  post-up echo "Cellular (ppp0) is online"
+  post-up /sbin/ifconfig ppp0 mtu 1200
 EOF
 
         echo "$out_str" >> /etc/network/interfaces
