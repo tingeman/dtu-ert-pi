@@ -16,10 +16,15 @@ fi
 # DTUERTPI_DIR will be set and can be used as the base for determining
 # folder structure.
 # If not set, get the current directory from the bash environment
+
+INSTALL_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 if [[ -z $DTUERTPI_DIR ]]; then
-  SH_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    BASE_DIR=$(cd "$INSTALL_SCRIPTS_DIR/.." && pwd)
+    DTUERTPI_DIR="$BASE_DIR/dtu-ert-pi"
+    SH_SCRIPTS_DIR="$DTUERTPI_DIR"/sh_scripts
 else
-  SH_SCRIPTS_DIR="$DTUERTPI_DIR"/sh_scripts
+    SH_SCRIPTS_DIR="$DTUERTPI_DIR"/sh_scripts
 fi
 
 
@@ -27,7 +32,7 @@ echo " "
 echo ">>> Installing forced_reboot timer to reboot at 04:00 UTC every day"
 
 echo "Copying systemd files from templates..."
-cp -f $SH_SCRIPTS_DIR/template_files/forced_reboot.* /etc/systemd/system/
+cp -f $INSTALL_SCRIPTS_DIR/template_files/forced_reboot.* /etc/systemd/system/
 
 echo "Reloading daemons..."
 systemctl daemon-reload
