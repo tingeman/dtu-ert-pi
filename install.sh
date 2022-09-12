@@ -189,7 +189,7 @@ fi
 # ==============================================================================
 
 if [[ $configure_dhcp_server == true ]]; then
-    f_configure_dhcp_client
+    f_configure_dhcp_server
 fi
 
 # ==============================================================================
@@ -446,10 +446,29 @@ echo ">>> All logs etc configured for storage on usb drive, in preparation for m
 echo 
 
 # ==============================================================================
+# Set forced reboot timer
+# ==============================================================================
+
+echo " "
+echo ">>> Installing forced_reboot timer to reboot at 04:00 UTC every day"
+
+echo "Copying systemd files from templates..."
+cp -f $INSTALL_SCRIPTS_DIR/template_files/forced_reboot.* /etc/systemd/system/
+
+echo "Reloading daemons..."
+systemctl daemon-reload
+
+echo "Enabling timer..."
+systemctl enable --now forced_reboot.timer
+
+echo " "
+
+
+# ==============================================================================
 # Set crontab
 # ==============================================================================
 
-source $DTUERTPI_DIR/sh_scripts/auto_configure_crontab.sh
+source $DTUERTPI_DIR/sh_scripts/auto_configure_crontab.sh crontab_template_no4amreboot.txt
 
 
 # ==============================================================================

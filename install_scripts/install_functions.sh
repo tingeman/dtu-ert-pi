@@ -436,9 +436,9 @@ f_configure_modem_connection () {
 #   wait 30 more seconds for the cellular connection to become active
 auto ppp0
 iface ppp0 inet wvdial
-pre-up /etc/ppp/wait-dialup-hardware ttyUSB2 30
-pre-up sleep 30
-post-up echo "Cellular (ppp0) is online"
+  pre-up /etc/ppp/wait-dialup-hardware ttyUSB2 30
+  pre-up sleep 30
+  post-up echo "Cellular (ppp0) is online"
 EOF
 
         echo "$out_str" >> /etc/network/interfaces
@@ -446,6 +446,23 @@ EOF
         # Section does exist...
         echo "It seems ppp0 interface is already configured... skipping this step."
     fi
+
+    match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/ppp/options | grep '^mtu')
+    match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+    if [[ -z "$match" ]]; then
+        # if line is missing, insert it 
+        echo "mtu 1200" >> /etc/ppp/options
+        echo "Inserted missing line"
+    elif [[  "$match" == "#"* ]]; then
+        # if line is commented, insert new line after the commented line
+        sed -i 's/^[[:space:]]*#[[:space:]]*mtu .*/&\nmtu 1200/' /etc/ppp/options
+        echo "Found commented line, inserting new line after it"
+    else
+        # if line exists, replace it
+        sed -i "s/^\s*\(mtu .*\)/mtu 1200/" /etc/ppp/options
+        echo 'Found existing line and replaced it.'
+    fi
+
 }
 
 

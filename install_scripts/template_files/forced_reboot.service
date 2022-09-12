@@ -1,0 +1,7 @@
+[Unit]
+Description=Do a forced reboot.
+
+[Service] 
+Type=simple
+ExecStart=/bin/bash /root/dtu-ert-pi/sh_scripts/reboot_now.sh
+Type=oneshot

@@ -1,0 +1,17 @@
+[Unit]
+Description=Schedule force reboot daily at 04:00 UTC.
+RefuseManualStart=no # Allow manual starts
+RefuseManualStop=no # Allow manual stops 
+
+[Timer]
+#Execute job if it missed a run due to machine being off (false=don't)
+Persistent=false
+# run every day at 04:00 UTC
+OnCalendar=*-*-* 4:00:00
+# run within a 1min time window from scheduled time
+AccuracySec=1min
+#File describing job to execute
+Unit=forced_reboot.service 
+
+[Install]
+WantedBy=timers.target
