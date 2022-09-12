@@ -10,6 +10,14 @@ else
   SH_SCRIPTS_DIR="$DTUERTPI_DIR"/sh_scripts
 fi
 
+if [[ $# -gt 0 ]]; then
+  if [[ -f $1 ]]; then
+    CRONTAB_TEMPLATE=$1
+  elif [[ -f "$SH_SCRIPTS_DIR/template_files/$1" ]]; then
+    CRONTAB_TEMPLATE="$SH_SCRIPTS_DIR/template_files/$1"
+  fi
+fi
+
 if [[ -z $CRONTAB_TEMPLATE ]]; then
   # Different crontab template files are available.
   # Add more custom templates in dtu-ert-pi/sh_scripts/template_files
@@ -17,6 +25,10 @@ if [[ -z $CRONTAB_TEMPLATE ]]; then
   CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template_testing.txt
   #CRONTAB_TEMPLATE=$SH_SCRIPTS_DIR/template_files/crontab_template_shutdown.txt
 fi
+
+echo " "
+echo "Updating crontab using: $CRONTAB_TEMPLATE"
+echo " "
 
 # import settings
 source "$SH_SCRIPTS_DIR"/script_settings
