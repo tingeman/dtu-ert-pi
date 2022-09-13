@@ -25,7 +25,7 @@ HOSTNAME=$(hostname)
 CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdown.txt
 
 # [GIT BRANCH] --------------------------------------------
-GIT_BRANCH=develop      # master, develop or live_test
+GIT_BRANCH=live_test      # master, develop or live_test
 
 
 
