@@ -49,7 +49,7 @@ PORT="22"
 # [AUTOSSH] -----------------------------------------
 SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
-FWD_PORT="2221"
+FWD_PORT="3332"
 
 # [WITTYPI] -----------------------------------------------
 WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
