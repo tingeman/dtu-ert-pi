@@ -26,7 +26,7 @@ PORT="22"
 # [AUTOSSH] -----------------------------------------
 SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
-FWD_PORT="2221"
+FWD_PORT="3332"
 
 
 
