@@ -42,9 +42,7 @@ fi
 # Create terrameter connection
 # ==============================================================================
 
-if [[ $create_terrameter_connection == true ]]; then
-    f_configure_terrameter_connection
-fi
+f_configure_terrameter_connection
 
 
 echo
