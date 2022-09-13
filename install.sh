@@ -27,6 +27,7 @@ configure_autossh=true
 enable_I2C=true
 install_wittypi=true
 configure_wittypi=true 
+configure_terrameter_connection=true
 
 # PREDEFINED SETTINGS:
 
@@ -40,7 +41,7 @@ HOSTNAME=$(hostname)
 CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdown.txt
 
 # [GIT BRANCH] --------------------------------------------
-GIT_BRANCH=live_test      # master, develop or live_test
+GIT_BRANCH=develop      # master, develop or live_test
 
 # [UPLOAD SERVER] -----------------------------------------
 SERVER_IP="192.38.64.71"
@@ -49,7 +50,7 @@ PORT="22"
 # [AUTOSSH] -----------------------------------------
 SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
-FWD_PORT="3332"
+FWD_PORT="3333"
 
 # [WITTYPI] -----------------------------------------------
 WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
@@ -396,6 +397,16 @@ sed -i "{s#^[[:space:]]*SERVER_IP=.*#SERVER_IP=\"$SERVER_IP\"#}" $DTUERTPI_DIR/s
 sed -i "{s#^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
 
 
+
+# ==============================================================================
+# Create terrameter connection
+# ==============================================================================
+
+if [[ $create_terrameter_connection == true ]]; then
+    f_configure_terrameter_connection
+fi
+
+
 # ==============================================================================
 # Configure witty pi functionality
 # ==============================================================================
@@ -472,6 +483,10 @@ echo " "
 # ==============================================================================
 
 source $DTUERTPI_DIR/sh_scripts/auto_configure_crontab.sh crontab_template_no4amreboot.txt
+
+
+
+
 
 
 # ==============================================================================

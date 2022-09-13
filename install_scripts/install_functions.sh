@@ -297,6 +297,7 @@ f_configure_dhcp_server () {
     match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/dhcp/dhcpd.conf | grep 'host LS209110003 .*')
     match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
     if [[ -z "$match" ]]; then
+        echo 'Adding static ip assignment for host LS209110003 in /etc/dhcp/dhcpd.conf ...'
         echo " " >> /etc/dhcp/dhcpd.conf
         echo "host LS209110003 {" >> /etc/dhcp/dhcpd.conf
         echo "  hardware ethernet 02:AD:BE:EF:03:00;" >> /etc/dhcp/dhcpd.conf
@@ -304,6 +305,20 @@ f_configure_dhcp_server () {
         echo "}" >> /etc/dhcp/dhcpd.conf
     else
         echo 'It seems dhcp server is already configured for host LS209110003.'
+        echo 'Please check settings in /etc/dhcp/dhcpd.conf'
+    fi
+
+    match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/dhcp/dhcpd.conf | grep 'host LSsimulator .*')
+    match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+    if [[ -z "$match" ]]; then
+        echo 'Adding static ip assignment for host LSsimulator in /etc/dhcp/dhcpd.conf ...'
+        echo " " >> /etc/dhcp/dhcpd.conf
+        echo "host LSsimulator {" >> /etc/dhcp/dhcpd.conf
+        echo "  hardware ethernet e4:5f:01:c6:2f:f5;" >> /etc/dhcp/dhcpd.conf
+        echo "  fixed-address 192.168.23.14;" >> /etc/dhcp/dhcpd.conf
+        echo "}" >> /etc/dhcp/dhcpd.conf
+    else
+        echo 'It seems dhcp server is already configured for host LSsimulator.'
         echo 'Please check settings in /etc/dhcp/dhcpd.conf'
     fi
 
@@ -624,4 +639,107 @@ f_configure_wittypi () {
     echo ">>> Configuring Witty Pi to power on Raspberry Pi when input voltage recovers above $out_str V ..."
     set_recovery_voltage_threshold $WITTYPI_RECOVERY_VOLTAGE_THRESHOLD  # threshold voltage * 10
     
+}
+
+
+# ==============================================================================
+# Configure terrameter connection
+# ==============================================================================
+
+f_configure_terrameter_connection () {
+
+    echo " "    
+    echo ">>> Configuring Terrameter connection..."
+    
+    match=$(cat /etc/passwd | grep "terrameter")
+    if [[ -z $match ]]; then
+        echo "Adding user terrameter ..."
+        useradd -m -s /bin/bash -p $(openssl passwd -crypt "111111") "terrameter"
+    else
+        echo "It seems user terrameter already exists, skipping this step ..."
+    fi
+
+    match=$(grep 'KexAlgorithms' /etc/ssh/sshd_config)
+    if [[ -z $match ]]; then
+        echo "Adding KexAlgorithms diffie-hellman-group1-sha1 to /etc/ssh/sshd_config..."
+        echo " " >> /etc/ssh/sshd_config
+        echo "KexAlgorithms diffie-hellman-group1-sha1,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1" >> /etc/ssh/sshd_config
+        echo " " >> /etc/ssh/sshd_config
+    else
+        match=$(grep 'KexAlgorithms' /etc/ssh/sshd_config | grep "diffie-hellman-group1-sha1")
+        if [[ -z $match ]]; then
+            echo "Appending diffie-hellman-group1-sha1 to KexAlgorithms in /etc/ssh/sshd_config..."
+            sed -i 's/KexAlgorithms \(.*\)/KexAlgorithms diffie-hellman-group1-sha1,\1/' /etc/ssh/sshd_config
+        else
+            echo "It seems the diffie-hellman-group1-sha1 kex algorithm is already specified, skipping this point..."
+        fi
+    fi
+
+    if [[ -f /root/.ssh/config ]]; then
+        match=$(grep 'Host 192.168.23.10' /etc/ssh/sshd_config)
+        if [[ -z $match ]]; then
+            echo "Adding KexAlgorithm diffie-hellman-group1-sha1 in /root/.ssh/config for host 192.168.23.10..."
+            echo " " >> /root/.ssh/config
+            echo "Host 192.168.23.10" >> /root/.ssh/config
+            echo "     KexAlgorithms +diffie-hellman-group1-sha1" >> /root/.ssh/config    
+        else
+            match=$(sed -n '/^Host 192.168.23.10/,/^$/ { /KexAlgorithms/p  }' /root/.ssh/config | grep "diffie-hellman-group1-sha1")
+            if [[ -z $match ]]; then
+                echo "Appending diffie-hellman-group1-sha1 to KexAlgorithms in /root/.ssh/config for host 192.168.23.10..."
+                sed -i '/^Host 192.168.23.10/,/^$/ { s/KexAlgorithms \(.*\)/KexAlgorithms diffie-hellman-group1-sha1,\1/ }' /root/.ssh/config
+            else
+                echo "It seems the diffie-hellman-group1-sha1 kex algorithm is already specified, skipping this point..."
+            fi
+        fi
+    else
+        if [[! -d /root/.ssh ]]; then
+            mkdir -p /root/.ssh/config
+        fi
+        echo "Adding KexAlgorithm diffie-hellman-group1-sha1 in /root/.ssh/config for host 192.168.23.10..."
+        echo "Host 192.168.23.10" >> /root/.ssh/config
+        echo "     KexAlgorithms +diffie-hellman-group1-sha1" >> /root/.ssh/config
+    fi
+
+    match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/dhcp/dhcpd.conf | grep 'host LS209110003 .*')
+    match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+    if [[ -z "$match" ]]; then
+        echo 'Adding static ip assignment for host LS209110003 in /etc/dhcp/dhcpd.conf ...'
+        echo " " >> /etc/dhcp/dhcpd.conf
+        echo "host LS209110003 {" >> /etc/dhcp/dhcpd.conf
+        echo "  hardware ethernet 02:AD:BE:EF:03:00;" >> /etc/dhcp/dhcpd.conf
+        echo "  fixed-address 192.168.23.10;" >> /etc/dhcp/dhcpd.conf
+        echo "}" >> /etc/dhcp/dhcpd.conf
+    else
+        echo 'It seems dhcp server is already configured for host LS209110003.'
+        echo 'Please check settings in /etc/dhcp/dhcpd.conf'
+    fi
+
+    match=$(grep '^[[:blank:]]*[^[:blank:]#]' /etc/dhcp/dhcpd.conf | grep 'host LSsimulator .*')
+    match=$(echo -e "$match" | sed -e 's/^[[:space:]]*//')
+    if [[ -z "$match" ]]; then
+        echo 'Adding static ip assignment for host LSsimulator in /etc/dhcp/dhcpd.conf ...'
+        echo " " >> /etc/dhcp/dhcpd.conf
+        echo "host LSsimulator {" >> /etc/dhcp/dhcpd.conf
+        echo "  hardware ethernet e4:5f:01:c6:2f:f5;" >> /etc/dhcp/dhcpd.conf
+        echo "  fixed-address 192.168.23.14;" >> /etc/dhcp/dhcpd.conf
+        echo "}" >> /etc/dhcp/dhcpd.conf
+    else
+        echo 'It seems dhcp server is already configured for host LSsimulator.'
+        echo 'Please check settings in /etc/dhcp/dhcpd.conf'
+    fi
+
+    echo
+    echo
+    echo '>>> Restarting dhcp server ...'
+    sudo systemctl daemon-reload
+    sudo service isc-dhcp-server stop
+    sudo service isc-dhcp-server start
+    sudo systemctl disable isc-dhcp-server
+    sudo systemctl enable isc-dhcp-server
+
+    if [ $? -eq 1 ]; then
+        echo "There was a problem starting dhcp server!"
+    else
+        echo "Success"
+    fi
 }
