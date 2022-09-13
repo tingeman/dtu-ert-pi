@@ -27,6 +27,7 @@ configure_autossh=true
 enable_I2C=true
 install_wittypi=true
 configure_wittypi=true 
+configure_terrameter_connection=true
 
 # PREDEFINED SETTINGS:
 
@@ -396,6 +397,16 @@ sed -i "{s#^[[:space:]]*SERVER_IP=.*#SERVER_IP=\"$SERVER_IP\"#}" $DTUERTPI_DIR/s
 sed -i "{s#^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/script_settings
 
 
+
+# ==============================================================================
+# Create terrameter connection
+# ==============================================================================
+
+if [[ $create_terrameter_connection == true ]]; then
+    f_configure_terrameter_connection
+fi
+
+
 # ==============================================================================
 # Configure witty pi functionality
 # ==============================================================================
@@ -472,6 +483,10 @@ echo " "
 # ==============================================================================
 
 source $DTUERTPI_DIR/sh_scripts/auto_configure_crontab.sh crontab_template_no4amreboot.txt
+
+
+
+
 
 
 # ==============================================================================
