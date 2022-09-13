@@ -25,7 +25,7 @@ HOSTNAME=$(hostname)
 CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdown.txt
 
 # [GIT BRANCH] --------------------------------------------
-GIT_BRANCH=develop      # master or develop
+GIT_BRANCH=develop      # master, develop or live_test
 
 
 
@@ -85,6 +85,9 @@ if [[ $GIT_BRANCH == develop ]]; then
 elif [[ $GIT_BRANCH == master ]]; then
   wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
   SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
+elif [[ $GIT_BRANCH == live_test ]]; then
+  wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/live_test.zip -O "$TMP_DIR/dtu-ert-pi.zip"
+  SRC_DIR="$TMP_DIR"/dtu-ert-pi-live_test
 else
   echo 'Unknown git branch specified, aborting!'
   exit 1
