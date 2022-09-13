@@ -5,9 +5,9 @@
 # folder structure.
 # If not set, get the current directory from the bash environment
 if [[ -z "$DTUERTPI_DIR" ]]; then
-  "SH_SCRIPTS_DIR"="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  SH_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 else
-  "SH_SCRIPTS_DIR"="$DTUERTPI_DIR"/sh_scripts
+  SH_SCRIPTS_DIR="$DTUERTPI_DIR"/sh_scripts
 fi
 
 # import settings
