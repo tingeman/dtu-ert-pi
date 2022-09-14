@@ -402,7 +402,7 @@ sed -i "{s#^[[:space:]]*PORT=.*#PORT=\"$PORT\"#}" $DTUERTPI_DIR/sh_scripts/scrip
 # Create terrameter connection
 # ==============================================================================
 
-if [[ $create_terrameter_connection == true ]]; then
+if [[ $configure_terrameter_connection == true ]]; then
     f_configure_terrameter_connection
 fi
 
