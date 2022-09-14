@@ -692,7 +692,7 @@ f_configure_terrameter_connection () {
             fi
         fi
     else
-        if [[! -d /root/.ssh ]]; then
+        if [[ ! -d /root/.ssh ]]; then
             mkdir -p /root/.ssh/config
         fi
         echo "Adding KexAlgorithm diffie-hellman-group1-sha1 in /root/.ssh/config for host 192.168.23.10..."
