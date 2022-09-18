@@ -40,7 +40,8 @@ HOSTNAME=$(hostname)
 CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdown.txt
 
 # [GIT BRANCH] --------------------------------------------
-GIT_BRANCH=develop      # master or develop
+GIT_BRANCH=commit      # master, develop or live_test
+COMMIT_ZIP_URL='https://github.com/tingeman/dtu-ert-pi/archive/053011e5dee8c60bb9712d8984fd463d633ae981.zip'
 
 # [UPLOAD SERVER] -----------------------------------------
 SERVER_IP="192.38.64.71"
@@ -49,12 +50,12 @@ PORT="22"
 # [AUTOSSH] -----------------------------------------
 SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
-FWD_PORT="2221"
+FWD_PORT="3333"
 
 # [WITTYPI] -----------------------------------------------
 WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script
-WITTYPI_INSTALL_SCRIPT_URL="https://github.com/tingeman/Witty-Pi-4/raw/develop/Software/install.sh"
-WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/refs/heads/main.zip"
+WITTYPI_INSTALL_SCRIPT_URL="https://github.com/tingeman/Witty-Pi-4/raw/254ddd65a2a0f70d7be370bd72da5f95f1b49564/Software/install.sh"
+WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/254ddd65a2a0f70d7be370bd72da5f95f1b49564.zip"
 # WITTYPI_DOWNLOAD_URL="https://www.uugear.com/repo/WittyPi4/LATEST"    # Uncomment to install UUGEAR latest version instead
 INSTALL_UWI=false     # Set following line to 'true' to install UUGEAR Web Interface
 UWI_DOWNLOAD_URL="https://www.uugear.com/repo/UWI/installUWI.sh"
@@ -133,6 +134,9 @@ else
   elif [[ $GIT_BRANCH == master ]]; then
     wget https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/master.zip -O "$TMP_DIR/dtu-ert-pi.zip"
     SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
+  elif [[ $GIT_BRANCH == commit ]]; then
+    wget $COMMIT_ZIP_URL -O "$TMP_DIR/dtu-ert-pi.zip"
+    SRC_DIR="$TMP_DIR"/"dtu-ert-pi-"$(basename $COMMIT_ZIP_URL .zip)
   else
     echo 'Unknown git branch specified, aborting!'
     exit 1
