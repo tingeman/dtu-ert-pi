@@ -41,7 +41,7 @@ CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdo
 
 # [GIT BRANCH] --------------------------------------------
 GIT_BRANCH=commit      # master, develop or live_test
-COMMIT_ZIP_URL='https://github.com/tingeman/dtu-ert-pi/archive/053011e5dee8c60bb9712d8984fd463d633ae981.zip'
+COMMIT_ZIP_URL='https://github.com/tingeman/dtu-ert-pi/archive/97170013f7701c754a1d109fe00b42db2b23fbb4.zip'
 
 # [UPLOAD SERVER] -----------------------------------------
 SERVER_IP="192.38.64.71"
