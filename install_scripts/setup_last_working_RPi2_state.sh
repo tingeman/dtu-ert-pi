@@ -2,14 +2,14 @@
 
 echo ">>> Final preparations for to resemble RPi2 state before attempted update..."
 
-echo "Updating and reconfiguring wittypi ..."
-~/install_files/update_wittypi_codebase.sh
+echo "Reconfiguring wittypi ..."
+#~/install_files/update_wittypi_codebase.sh
 ~/install_files/reconfigure_wittypi.sh
 
 echo "Reinstalling autossh ..."
 ~/install_files/reinstall_autossh.sh
 
-echo "Reinstalling shcp server ..."
+echo "Reinstalling dhcp server ..."
 ~/install_files/reinstall_dhcp_server.sh
 
 echo "Installing crontab ..."

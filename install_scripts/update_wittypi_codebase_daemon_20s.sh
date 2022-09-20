@@ -21,8 +21,8 @@ HOSTNAME=$(hostname)
 
 
 # [WITTYPI] -----------------------------------------------
-WITTYPI_GIT_BRANCH=develop      # main or develop
-WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/refs/heads"
+WITTYPI_GIT_BRANCH=commit      # main or develop
+WITTYPI_DOWNLOAD_URL="https://github.com/tingeman/Witty-Pi-4/archive/952cc0871fe00b6efa2b33312bb109b78d3e8d8b.zip"
 # WITTYPI_DOWNLOAD_URL="https://www.uugear.com/repo/WittyPi4/LATEST"    # Uncomment to install UUGEAR latest version instead
 
 WITTYPI_DEFAULT_POWER_STATE=1      # 1 = TURN ON; 0 = STAY OFF, when power is connected

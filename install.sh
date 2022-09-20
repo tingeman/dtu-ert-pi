@@ -147,7 +147,13 @@ else
     SRC_DIR="$TMP_DIR"/dtu-ert-pi-master
   elif [[ $GIT_BRANCH == commit ]]; then
     wget $COMMIT_ZIP_URL -O "$TMP_DIR/dtu-ert-pi.zip"
-    SRC_DIR="$TMP_DIR"/"dtu-ert-pi-"$(basename $COMMIT_ZIP_URL .zip)
+    match=$(echo $COMMIT_ZIP_URL | grep '/refs/heads')
+    if [[ -z $match ]]; then
+      SRC_DIR="$TMP_DIR"/"dtu-ert-pi-"$(basename $COMMIT_ZIP_URL .zip)
+    else
+      branch_ref=$(echo $COMMIT_ZIP_URL | sed 's#.*/refs/heads/\(.*\)#\1#' | sed 's#/#-#' | sed 's/.zip//')
+      SRC_DIR="$TMP_DIR"/"dtu-ert-pi-"$branch_ref
+    fi
   else
     echo 'Unknown git branch specified, aborting!'
     exit 1
