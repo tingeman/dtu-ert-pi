@@ -48,13 +48,16 @@ echo ">>> Downloading install script ..."
 echo " "
 # Now prepare for installation of software:
 cd ~
-wget https://github.com/tingeman/dtu-ert-pi/raw/dc2aea20b61cfd7cb229300173a673403fdc9879/install.sh
+wget https://raw.githubusercontent.com/tingeman/dtu-ert-pi/recreate_RPi3_failure_state/main/install.sh
+#wget https://github.com/tingeman/dtu-ert-pi/raw/dc2aea20b61cfd7cb229300173a673403fdc9879/install.sh
 chmod +x install.sh
 
 echo " "
 echo "----------------------------------------------------------------------------"
 echo " "
 echo ">>> You must run ./install.sh manually to proceed with installation!"
+echo "    Then reboot using ~/dtu-ert-pi/sh_scripts/reboot_now.sh"
+echo "    Then run ~/install_files/setup_last_working_RPi2_state.sh"
 echo " "
 
 #./install.sh

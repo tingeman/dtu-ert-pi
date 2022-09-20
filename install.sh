@@ -41,7 +41,7 @@ CRONTAB_TEMPLATE=$DTUERTPI_DIR/sh_scripts/template_files/crontab_template_shutdo
 
 # [GIT BRANCH] --------------------------------------------
 GIT_BRANCH=commit      # master, develop or live_test
-COMMIT_ZIP_URL='https://github.com/tingeman/dtu-ert-pi/archive/97170013f7701c754a1d109fe00b42db2b23fbb4.zip'
+COMMIT_ZIP_URL='https://github.com/tingeman/dtu-ert-pi/archive/refs/heads/recreate_RPi3_failure_state/main.zip'
 
 # [UPLOAD SERVER] -----------------------------------------
 SERVER_IP="192.38.64.71"
@@ -50,7 +50,18 @@ PORT="22"
 # [AUTOSSH] -----------------------------------------
 SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
-FWD_PORT="3333"
+
+if [[ $HOSTNAME == QEQ-ERT-02-RPi1 ]]; then
+  FWD_PORT="3331"
+elif [[ $HOSTNAME == QEQ-ERT-02-RPi2 ]]; then
+  FWD_PORT="3332"
+elif [[ $HOSTNAME == QEQ-ERT-02-RPi2 ]]; then
+  FWD_PORT="3333"  
+elif [[ $HOSTNAME == QEQ-ERT-02-RPi2 ]]; then
+  FWD_PORT="3334"  
+else
+  FWD_PORT="2221"
+fi
 
 # [WITTYPI] -----------------------------------------------
 WITTYPI_USE_GLOBAL_SETTINGS=true  # Use these settings instead of those locally defined in wittypi install script

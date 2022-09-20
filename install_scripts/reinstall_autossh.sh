@@ -25,8 +25,18 @@ PORT="22"
 # [AUTOSSH] -----------------------------------------
 SSHKEY=/root/.ssh/"$HOSTNAME"_sshkey
 SSHUSER=$HOSTNAME
-FWD_PORT="2221"
 
+if [[ $HOSTNAME == QEQ-ERT-02-RPi1 ]]; then
+  FWD_PORT="3331"
+elif [[ $HOSTNAME == QEQ-ERT-02-RPi2 ]]; then
+  FWD_PORT="3332"
+elif [[ $HOSTNAME == QEQ-ERT-02-RPi2 ]]; then
+  FWD_PORT="3333"  
+elif [[ $HOSTNAME == QEQ-ERT-02-RPi2 ]]; then
+  FWD_PORT="3334"  
+else
+  FWD_PORT="2221"
+fi
 
 echo '================================================================================'
 echo '|                                                                              |'
